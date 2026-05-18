@@ -54,8 +54,11 @@ To be determined at public-flip time. Likely a permissive license for the archit
 ## Cross-references
 
 - Quickstart for early-access testers: `QUICKSTART.md`
+- Warm-reply workflow (post-send): `WARM-REPLY-WORKFLOW.md`
 - Invitation message template (operator-side): `INVITATION-TEMPLATE.md`
 - Active path-decision context: `NEXT-3-DECISIONS.md`
+- Rollback contract: `ROLLBACK.md`
+- Agents (currently shipped + pattern for B-N): `agents/README.md`
 - Research lab (private): `prometheus-crystal-lab-auto`
 - Honest review of the competing pattern (Polsia): https://crevio.co/blog/is-polsia-legit
 - B-set proposal: see `B-PROPOSAL.md` in this repo
