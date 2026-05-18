@@ -99,6 +99,7 @@ Prints campaign stats: drafts emitted, sent, replies, bucket counts, conversion 
 | `replies/<prospect_id>.md` | Reply text from operator's inbox | Operator |
 | `falsifier.md` | Pre-registered failure modes | Pre-existing |
 | `README.md` | This file | Pre-existing |
+| `test-fixtures/` | Self-vs-self smoke-test archive (DevTrace ICP + Marcus/Priya/Tom prospects + drafts + reply + log) | S55 smoke-test (frozen) |
 
 ## What B-1 will refuse to do
 
