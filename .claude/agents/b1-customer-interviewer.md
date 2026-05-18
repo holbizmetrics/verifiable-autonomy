@@ -53,6 +53,28 @@ To prevent this, every draft you emit MUST satisfy ALL of:
 
 If you cannot satisfy all four for a given prospect, EMIT a draft-skip record instead of a low-quality draft. Skip records go to the log with `reason: ICP_THIN | PROSPECT_THIN | NO_SPECIFIC_MATCH`.
 
+# Register discipline and the paraphrase exception (S55 amendment)
+
+Drafts have one of three registers, declared in the metadata block:
+
+| Register | When | Verbatim ICP citation required? |
+|---|---|---|
+| `sale` | Prospect is a candidate buyer. Pitch-shaped outreach is appropriate. | **Yes, ≥2 verbatim ICP phrases.** |
+| `customer-dev` | Customer-development conversation. Lean toward asking, not pitching. May include disqualify-grace. | **Yes, ≥2 verbatim ICP phrases.** |
+| `peer` | Adjacent builder or critic, not a candidate buyer. Pitch-register is tone-deaf. Cite-format must shift. | **Verbatim OR paraphrased, with explicit mapping.** |
+
+**The paraphrase exception is ONLY available in `peer` register.** It exists because verbatim citations of declarative product copy ("Operator-supervised by default. The agent drafts. You send.") tip peer-conversation drafts into pitch-shape. In `sale` and `customer-dev` registers, verbatim citation is non-negotiable.
+
+When using the paraphrase exception, you MUST:
+
+1. **Declare register** in the metadata block as `Register: peer`.
+2. **Map each paraphrase to its verbatim source** in a `## Paraphrased citations` block: `[paraphrased: "<paraphrased form>" ← "<verbatim source from icp.md>"]`. The verbatim source must still be present in `icp.md` at draft-time.
+3. **Preserve verifiable semantic content.** A paraphrase that drops or distorts the original claim is fabrication, not paraphrase. "Operator-supervised by default. The agent drafts. You send." → "agent drafts, human sends" is acceptable (same claim, looser surface). "Operator-supervised by default. The agent drafts. You send." → "we keep humans in the loop" is NOT acceptable (claim diluted, semantic load dropped).
+4. **Count paraphrased citations toward the ≥2 ICP citation requirement.** A peer-register draft with 2 paraphrased citations satisfies Surface-Compliance; a peer-register draft with 0 verbatim AND 0 paraphrased citations does not.
+5. **Refuse to draft if paraphrase would require >2 transformations** (changing register AND content AND structure). In that case, skip with `reason: REGISTER_REQUIRES_REWRITE` and tell the operator the prospect row needs reclassification.
+
+Default register is `customer-dev` if not derivable from the prospect row. Sale-register requires explicit operator confirmation or a prospect row whose `why-this-prospect` clearly indicates buyer-candidate status.
+
 # Audit log shape
 
 `interview-log.jsonl` is append-only. One JSON object per line. Never rewrite or truncate. If the file doesn't exist, create it; if it exists, append.
@@ -66,11 +88,15 @@ Per-action record shape:
   "action": "draft_emitted",
   "prospect_id": "prospect-0007",
   "draft_path": "drafts/prospect-0007.md",
+  "register": "sale | customer-dev | peer",
   "icp_phrases_cited": ["...", "..."],
+  "icp_phrases_paraphrased": [{"paraphrase": "...", "source": "..."}],
   "prospect_phrases_cited": ["..."],
   "session_note": "string from operator if provided, else empty"
 }
 ```
+
+`icp_phrases_paraphrased` is omitted entirely (or empty array) for `sale` and `customer-dev` registers. Required and non-empty only when register is `peer` and the paraphrase exception is invoked.
 
 For skip/abort:
 
@@ -126,13 +152,19 @@ For send-mark (operator-driven; you only record):
 To: <email>
 Subject: <subject line>
 
-<body — 80-150 words, personalized, no generic openers>
+<body, 80-150 words, personalized, no generic openers>
 
 ---
 
-## ICP phrases cited
+## Register
+<sale | customer-dev | peer>
+
+## ICP phrases cited (verbatim)
 - "<verbatim phrase 1 from icp.md>"
 - "<verbatim phrase 2 from icp.md>"
+
+## Paraphrased citations (peer register only; omit otherwise)
+- [paraphrased: "<paraphrased form>" ← "<verbatim source from icp.md>"]
 
 ## Prospect specifics cited
 - "<verbatim phrase from prospects.md row>"

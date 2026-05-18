@@ -70,6 +70,36 @@ drafts_emitted=$(jq -r 'select(.action=="draft_emitted")' interview-log.jsonl | 
 
 **If this fires:** The agent isn't honoring append-only. Any audit-trail integrity claim is broken until fixed.
 
+## Falsifier 7 — Paraphrase-rate drift (S55 amendment)
+
+**Pattern:** The peer-register paraphrase exception is invoked in >50% of drafts across a campaign. The exception was scoped to genuine peer-builder outreach; widespread use indicates either (a) ICP/prospect-list misclassification, (b) register-discipline drift back toward template-shaped output dressed up as paraphrase, or (c) most "prospects" are actually peers (which would change campaign strategy).
+
+**Check:**
+```bash
+# Paraphrase rate across drafts
+total=$(jq -r 'select(.action=="draft_emitted")' interview-log.jsonl | wc -l)
+paraphrased=$(jq -r 'select(.action=="draft_emitted" and .register=="peer")' interview-log.jsonl | wc -l)
+echo "Peer-register rate: $paraphrased / $total"
+```
+
+**Threshold:** >50% over n ≥ 10 drafts.
+
+**If this fires:** Inspect each peer-register draft. Are these genuinely peer-builders (adjacent products, critics, founder-friends)? Or has B-1 reclassified sale-register prospects as peer to dodge verbatim discipline? If the latter, the paraphrase exception is being abused. Retire the exception, restore strict verbatim, retire any drafts emitted under the exception.
+
+**Audit cross-check for paraphrased citations (extension of Falsifier 1):**
+```bash
+# Verify each paraphrase has a verbatim source actually present in icp.md
+jq -r 'select(.action=="draft_emitted") | .icp_phrases_paraphrased[]? | .source' interview-log.jsonl \
+  | sort -u \
+  | while read source; do
+      if ! grep -qF "$source" icp.md; then
+        echo "MISSING paraphrase source: $source"
+      fi
+    done
+```
+
+If a paraphrase points to a verbatim source NOT in `icp.md`, that's Falsifier 1 with extra steps: agent fabricated a source for the paraphrase. Retire v0.
+
 ## What this falsifier doc does NOT cover
 
 1. **Whether the customer-discovery campaign is good for the business.** That's a strategy question; B-1 is a tool. Bad ICP + perfect B-1 = wasted campaign.
