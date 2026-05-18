@@ -1,0 +1,19 @@
+# B-1 operator-filled files contain real prospect data — never commit.
+# Templates (*-template.md) are committed; the operator-copied versions are not.
+agents/b1-customer-interviewer/icp.md
+agents/b1-customer-interviewer/prospects.md
+agents/b1-customer-interviewer/interview-log.jsonl
+agents/b1-customer-interviewer/drafts/
+agents/b1-customer-interviewer/replies/
+
+# But keep the dir structure committed:
+!agents/b1-customer-interviewer/drafts/.gitkeep
+!agents/b1-customer-interviewer/replies/.gitkeep
+
+# Standard
+.DS_Store
+*.swp
+*.swo
+__pycache__/
+.venv/
+node_modules/
