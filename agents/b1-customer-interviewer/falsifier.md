@@ -70,9 +70,9 @@ drafts_emitted=$(jq -r 'select(.action=="draft_emitted")' interview-log.jsonl | 
 
 **If this fires:** The agent isn't honoring append-only. Any audit-trail integrity claim is broken until fixed.
 
-## Falsifier 7 — Paraphrase-rate drift (S55 amendment)
+## Falsifier 7 — Paraphrase-rate drift (S55 amendment, v0.2 per windows-claude HIGH 1)
 
-**Pattern:** The peer-register paraphrase exception is invoked in >50% of drafts across a campaign. The exception was scoped to genuine peer-builder outreach; widespread use indicates either (a) ICP/prospect-list misclassification, (b) register-discipline drift back toward template-shaped output dressed up as paraphrase, or (c) most "prospects" are actually peers (which would change campaign strategy).
+**Pattern:** The peer-register paraphrase exception is invoked too often across a campaign. The exception was scoped to genuine peer-builder outreach; widespread use indicates either (a) ICP/prospect-list misclassification, (b) register-discipline drift back toward template-shaped output dressed up as paraphrase, or (c) most "prospects" are actually peers (which would change campaign strategy).
 
 **Check:**
 ```bash
@@ -82,9 +82,13 @@ paraphrased=$(jq -r 'select(.action=="draft_emitted" and .register=="peer")' int
 echo "Peer-register rate: $paraphrased / $total"
 ```
 
-**Threshold:** >50% over n ≥ 10 drafts.
+**Two-tier threshold** (revised down from 50% per windows-claude review: 50% means half the campaign is already paraphrased before any alarm fires — too late):
 
-**If this fires:** Inspect each peer-register draft. Are these genuinely peer-builders (adjacent products, critics, founder-friends)? Or has B-1 reclassified sale-register prospects as peer to dodge verbatim discipline? If the latter, the paraphrase exception is being abused. Retire the exception, restore strict verbatim, retire any drafts emitted under the exception.
+- **Yellow zone (early warning):** >20% over n ≥ 10 drafts. Operator pre-send review required on the next 5 peer-register drafts. Inspect each: is the prospect genuinely a peer-builder, or is B-1 reclassifying to dodge verbatim discipline?
+- **Red zone (retirement trigger):** >35% over n ≥ 10 drafts. The exception is being abused or the prospect list is mis-targeted. Retire the exception, restore strict verbatim across the campaign, retire any drafts emitted under the exception pending operator re-review.
+
+**If yellow fires but inspection clears:** record the inspection note in the log; resume.
+**If red fires:** stop. Don't draft additional peer-register drafts. Investigate before any further paraphrase emission.
 
 **Audit cross-check for paraphrased citations (extension of Falsifier 1):**
 ```bash

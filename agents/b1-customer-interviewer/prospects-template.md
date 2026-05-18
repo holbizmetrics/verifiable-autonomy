@@ -6,7 +6,13 @@
 
 Use markdown sections per prospect, with the headings below. B-1 parses `## prospect-<id>: <name>` as the row boundary.
 
-Required fields: id, name, email, role, company, **one verbatim substrate snippet** (a sentence from their bio / blog / talk / job post that makes them them, not a generic role-holder).
+Required fields: id, name, email, role, company, **register**, **one verbatim substrate snippet** (a sentence from their bio / blog / talk / job post that makes them them, not a generic role-holder).
+
+**`register` field (per S55 amendment v0.2):** every prospect row MUST declare a register (`sale | customer-dev | peer`). The operator classifies at curation time; B-1 does NOT classify the register itself. If the row is missing this field, B-1 will STOP and ask you to classify (no defaulting). This is the operator-side gate that prevents the agent from self-granting paraphrase license.
+
+- `sale` — prospect is a candidate buyer. Pitch-shaped outreach is appropriate.
+- `customer-dev` — customer-development conversation. Lean ask, not pitch.
+- `peer` — adjacent builder or critic, not a candidate buyer. Pitch-register is tone-deaf; paraphrase-exception available.
 
 Optional but recommended: company-stage, recent observable (funding, launch, post; only include if you have a verifiable source), the specific reason you're reaching out to THEM.
 
@@ -20,6 +26,7 @@ Do NOT include speculation. If you don't know what they care about, leave it bla
 - **role:** Co-founder & CEO
 - **company:** Example.co (15 employees, B2B SaaS for veterinary clinics)
 - **company-stage:** ~$2M ARR, raised $1.5M seed in Q3 2025
+- **register:** sale
 - **substrate-snippet:** "We hired our last two engineers in 11 weeks combined. I screened every one of the 340 resumes myself because no recruiter understood our Rails 7 + Postgres + healthcare-compliance stack."
 - **substrate-source:** Her Indie Hackers post 2026-03-12 (URL on file)
 - **why-this-prospect:** Stated bottleneck matches our ICP's primary pain hypothesis verbatim; she has the role to buy; she's publicly looking for a solution.
@@ -32,6 +39,7 @@ Do NOT include speculation. If you don't know what they care about, leave it bla
 - **role:**
 - **company:**
 - **company-stage:**
+- **register:** [sale | customer-dev | peer — required]
 - **substrate-snippet:** [verbatim quote from their public material. The more specific, the better the draft.]
 - **substrate-source:** [URL or document reference]
 - **why-this-prospect:**
@@ -41,6 +49,7 @@ Do NOT include speculation. If you don't know what they care about, leave it bla
 - **email:**
 - **role:**
 - **company:**
+- **register:** [sale | customer-dev | peer — required]
 - **substrate-snippet:**
 - **substrate-source:**
 - **why-this-prospect:**
