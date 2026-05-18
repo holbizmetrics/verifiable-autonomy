@@ -2,7 +2,16 @@
 
 > **Not a Gantt. Not a roadmap.** Three calls that unblock everything downstream. When one resolves, this file updates. v1, S55 (2026-05-18).
 
-## Decision 1: Path A / B / C (early-access posture)
+## Decision 1: Path A / B / C (early-access posture) — RESOLVED 2026-05-18 → Path B
+
+**Resolved:** Path B. README amended in this commit; cap-of-5 invited early-access testers. `INVITATION-TEMPLATE.md` ready for operator-side use. `gh repo edit --add-collaborator` is the invite mechanism (manual, no tooling for N≤5).
+
+**What this unblocks:** Decision 2 (first real send) is now reachable. Decision 3 (public-flip trigger) remains unchanged for the moment.
+
+**Substrate (historical):** `SCOPING-PRODUCT-READINESS.md` (now historical; lean was B, operator authorized B 2026-05-18). Original call shape preserved below for audit.
+
+<details>
+<summary>Original Decision 1 framing (pre-resolution)</summary>
 
 **The call:** Does the repo stay fully private until 2 A-tracks flip (A), accept N≤5 invited early-access testers now (B), or split into public-manifesto + private-impl (C)?
 
@@ -14,7 +23,9 @@
 
 **What it unblocks:** any real-prospect send. Until Decision 1 is made, B-1 stays in draft-only mode regardless of draft quality.
 
-**Substrate:** `SCOPING-PRODUCT-READINESS.md`. Agent lean: B.
+**Agent lean:** B.
+
+</details>
 
 ---
 
@@ -25,10 +36,10 @@
 **Owner:** operator.
 
 **Info needed (preconditions):**
-- Decision 1 resolved (so the repo-link target exists).
-- Draft chosen from `drafts/prospect-0003.md` v1 / v2 / v2.1 — or rewrite. Stuart + Sarkar not yet drafted.
+- ~~Decision 1 resolved (so the repo-link target exists).~~ ✓ Resolved → Path B.
+- Draft chosen from `drafts/prospect-0003.md` v1 / v2 / v2.1 — or rewrite. Stuart + Sarkar already drafted (`prospect-0001.md` + `prospect-0002.md`).
 - Contact actually found (Substack DM, DEV profile, IH DM, or flowly.run contact).
-- Operator-side warm-reply workflow ready (replies go where, who classifies).
+- Operator-side warm-reply workflow ready (replies go where, who classifies). Pointer at repo root still TODO.
 
 **What it unblocks:** first real-reply data. Falsifier 4 (reply rate <1% over n≥30) gets its first data point. ICP gets first real-world correction signal.
 

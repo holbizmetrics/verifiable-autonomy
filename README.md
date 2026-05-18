@@ -4,7 +4,11 @@
 
 ## Status
 
-**Private (S55, 2026-05-18).** Flips public when at least two tracks have demonstrated step → auto operation with cross-operator review and clean audit logs.
+**Private with invited early-access (S55, 2026-05-18).** Flips fully public when at least two tracks have demonstrated step → auto operation with cross-operator review and clean audit logs.
+
+In the interim, repo access is by invitation, capped at 5 early-access testers. Invited testers see the same code with full audit-log access. The public read stays gated on proof; early-access exists to surface real-world friction that synthetic testing misses. Each invited tester is a falsifier-probe against the architecture's claims.
+
+Early-access posture is reversible. Cap can be lowered, raised, or revoked at any time; no public footprint accrues. Invitation message includes a one-line don't-post-publicly clause until the proof-gate clears.
 
 ## The thesis
 
@@ -41,7 +45,7 @@ The architecture exists in a research lab (PCLA — Prometheus Crystal Lab Auto)
 
 This repo flips from private to public when at least two tracks have flipped step → auto, demonstrated their falsifiers don't fire, and survived cross-operator review at the cross-session-same-family rung minimum.
 
-Until then: this README is the manifesto. The proof is owed.
+Until then: this README is the manifesto. Early-access testers are the first real-world probe. The public proof is owed.
 
 ## License
 
@@ -49,6 +53,9 @@ To be determined at public-flip time. Likely a permissive license for the archit
 
 ## Cross-references
 
+- Quickstart for early-access testers: `QUICKSTART.md`
+- Invitation message template (operator-side): `INVITATION-TEMPLATE.md`
+- Active path-decision context: `NEXT-3-DECISIONS.md`
 - Research lab (private): `prometheus-crystal-lab-auto`
 - Honest review of the competing pattern (Polsia): https://crevio.co/blog/is-polsia-legit
 - B-set proposal: see `B-PROPOSAL.md` in this repo
