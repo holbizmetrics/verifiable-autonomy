@@ -1,4 +1,4 @@
-# B-set: Business-Builder Track Set — PROPOSAL
+# B-set: Business-Builder Track Set: PROPOSAL
 
 > **Status: PROPOSAL. Not an active track set. Filed S55 (2026-05-18) to capture scope after Polsia competitive review. Implementation gated on A-1 landing + ≥2 PCLA tracks demo-stable + hosted-infra eng project funded. Do NOT begin B-track SPECs without re-reading hard prereqs § below.**
 
@@ -8,7 +8,7 @@ Polsia (https://polsia.com, launched Feb 2026, $49/mo + 20% rev-share) ships "AI
 
 The competitive opening: **autonomy without verification is what's failing in market.** PCLA's whole architecture is around audit + gates + rollback + cross-op review. That's precisely what Polsia is missing per the actual user reviews.
 
-This file scopes a Path-B track set that would instantiate PCLA's track-and-gate architecture for the business-builder use case. The differentiation is **not the agent inventory** — it's the falsifier + audit + rollback per track.
+This file scopes a Path-B track set that would instantiate PCLA's track-and-gate architecture for the business-builder use case. The differentiation is **not the agent inventory**: it's the falsifier + audit + rollback per track.
 
 ## Track inventory (8 tracks, B-1 .. B-8)
 
@@ -32,17 +32,17 @@ This file scopes a Path-B track set that would instantiate PCLA's track-and-gate
 
 ## Cross-cutting infrastructure (substrate, not tracks)
 
-1. **Hosted infra layer** — web server + DB + email account + analytics + ad-platform OAuth, per operator. **Polsia's actual moat. PCLA does not have it.** PCLA is a research lab, not a SaaS. If Path B is real, this is the bigger engineering project than all 8 tracks combined.
-2. **Audit bus** — unified `business-builder-audit.jsonl`, every track appends. Single source of truth for what happened.
-3. **Operator-attention router** — step-mode notifications + diff-to-approve. SecuredChat bus (A-6) is the substrate; pattern already works.
-4. **Killswitch** — one command takes all tracks back to step. ROLLBACK.md pattern, scaled.
-5. **Cross-Company Learning equivalent** — MIRROR Gap Taxonomy already does this for PCLA itself. For B-tracks: anonymized failure-mode aggregation across operators, audited and opt-in (unlike Polsia's closed transfer).
+1. **Hosted infra layer**: web server + DB + email account + analytics + ad-platform OAuth, per operator. **Polsia's actual moat. PCLA does not have it.** PCLA is a research lab, not a SaaS. If Path B is real, this is the bigger engineering project than all 8 tracks combined.
+2. **Audit bus**: unified `business-builder-audit.jsonl`, every track appends. Single source of truth for what happened.
+3. **Operator-attention router**: step-mode notifications + diff-to-approve. SecuredChat bus (A-6) is the substrate; pattern already works.
+4. **Killswitch**: one command takes all tracks back to step. ROLLBACK.md pattern, scaled.
+5. **Cross-Company Learning equivalent**: MIRROR Gap Taxonomy already does this for PCLA itself. For B-tracks: anonymized failure-mode aggregation across operators, audited and opt-in (unlike Polsia's closed transfer).
 
 ## Cross-operator review burden
 
 8 tracks × Eve-per-SPEC + Eve-per-first-impl = ~24 review cycles. Eve becomes the bottleneck.
 
-**Recommended:** Commission ONE external reviewer (Mark / external-Claude / human pentester) for the **B-architecture meta-review first** — does the falsifier-per-track pattern actually catch the failure modes that killed Polsia's reviews? Then per-track Eve reviews only after meta-review passes. Cuts ~half the queue.
+**Recommended:** Commission ONE external reviewer (Mark / external-Claude / human pentester) for the **B-architecture meta-review first**: does the falsifier-per-track pattern actually catch the failure modes that killed Polsia's reviews? Then per-track Eve reviews only after meta-review passes. Cuts ~half the queue.
 
 ## Hard prereqs (re-read before any B-track SPEC begins)
 

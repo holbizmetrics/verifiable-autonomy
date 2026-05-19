@@ -10,7 +10,7 @@
 
 ## Deferred items
 
-### MED-HIGH 4 — Metadata-body register mismatch unchecked
+### MED-HIGH 4: Metadata-body register mismatch unchecked
 
 windows-claude's catch: a non-peer draft body could contain paraphrased ICP-source-material that isn't in the verbatim-citation block. Falsifier 7 only counts records where `register=peer`; Falsifier 1 only checks declared verbatim citations. The undeclared paraphrase floats unverified.
 
@@ -18,15 +18,15 @@ windows-claude's catch: a non-peer draft body could contain paraphrased ICP-sour
 
 **Revisit when:** first real campaign emits ≥10 non-peer drafts. Spot-check 3 for undeclared paraphrase. If any caught, build the heuristic.
 
-### MED 5 — "2 transformations" rule is undefined
+### MED 5: "2 transformations" rule is undefined
 
 The `REGISTER_REQUIRES_REWRITE` skip-condition uses "would require >2 transformations" without defining a transformation. Lexical / syntactic / register-shift / claim-rewording / structural are all candidates; the agent currently decides what counts.
 
-**Why deferred:** v0.2 lowers stakes here — the score-0 reject (HIGH 3) catches the worst case (claim drop) before the transformation-count question matters. The 2-transformation rule is now a secondary skip-condition behind score-0.
+**Why deferred:** v0.2 lowers stakes here: the score-0 reject (HIGH 3) catches the worst case (claim drop) before the transformation-count question matters. The 2-transformation rule is now a secondary skip-condition behind score-0.
 
 **Revisit when:** B-1 invokes `REGISTER_REQUIRES_REWRITE` in a campaign and the operator finds the skip-vs-emit boundary unclear. Define the unit then with substrate.
 
-### MED 6 — Cross-application to B-2, B-3 not specified
+### MED 6: Cross-application to B-2, B-3 not specified
 
 The amendment doesn't say whether the paraphrase exception generalizes to other B-set agents.
 
@@ -36,7 +36,7 @@ The amendment doesn't say whether the paraphrase exception generalizes to other 
 
 **Revisit when:** B-2 design starts. Decide whether to copy the v0.2 amendment pattern (register field in prospects.md + score 0/1/2) or design something different.
 
-### MED 7 — Register transitions across the outreach chain
+### MED 7: Register transitions across the outreach chain
 
 If a peer-classified prospect's reply shows buyer-signal, who flips the register? Agent or operator?
 
@@ -46,9 +46,9 @@ If a peer-classified prospect's reply shows buyer-signal, who flips the register
 
 **Revisit when:** first follow-up sequence has 5+ rounds, OR operator hits a case where row-flip feels wrong.
 
-### MED-LOW 8 — Em-dash + paraphrase tell-surface interaction
+### MED-LOW 8: Em-dash + paraphrase tell-surface interaction
 
-The verbatim-citation discipline had a hidden second function: cited chunks were in a different voice (operator-manifesto) than B-1's surrounding draft. Voice-shift on quotation is a tell-removal — humans cite in different voice; AI templates have uniform voice throughout. Paraphrasing brings the citation into the agent's voice, removing the voice-shift.
+The verbatim-citation discipline had a hidden second function: cited chunks were in a different voice (operator-manifesto) than B-1's surrounding draft. Voice-shift on quotation is a tell-removal: humans cite in different voice; AI templates have uniform voice throughout. Paraphrasing brings the citation into the agent's voice, removing the voice-shift.
 
 **Stance (v0.2):** acknowledged trade-off. Peer-register drafts trade voice-shift-tell-prevention for tone-match. Operators reviewing peer-register drafts should specifically check for uniform-voice tells.
 
@@ -56,7 +56,7 @@ The verbatim-citation discipline had a hidden second function: cited chunks were
 
 **Optional fix (not in v0.2):** peer-register drafts could use an inline lead-in like "you've written that..." prefixing paraphrases, preserving structural voice-shift. Defer until needed.
 
-### LOW-MED 9 — Reply-citation paraphrase policy
+### LOW-MED 9: Reply-citation paraphrase policy
 
 The paraphrase exception applies to ICP citations. What about reply citations in follow-up drafts?
 

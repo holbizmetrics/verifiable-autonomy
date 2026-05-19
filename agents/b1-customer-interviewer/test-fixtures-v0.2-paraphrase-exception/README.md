@@ -6,21 +6,21 @@ This fixture is a **sibling** to `test-fixtures/` (which remains frozen as the v
 
 ## Substrate
 
-- **`icp.md`** — variant of the DevTrace ICP focused on phrases that surface the paraphrase-vs-verbatim tension in peer-register outreach. Em-dash-free per outgoing-mail discipline.
-- **`prospects.md`** — three prospects: one `peer` (eligible for paraphrase exception), one `customer-dev` (verbatim required), one `peer` with thin substrate (should skip with `PROSPECT_THIN`).
-- **`drafts/`** — one peer-register draft with scored paraphrased citations + one customer-dev draft with strict verbatim.
-- **`refused/`** — describes what a score-0 refusal looks like (no draft file emitted; log entry only).
-- **`interview-log.jsonl`** — sample records showing the v0.2 audit log shape (`register` field + `icp_phrases_paraphrased[].score`).
+- **`icp.md`**: variant of the DevTrace ICP focused on phrases that surface the paraphrase-vs-verbatim tension in peer-register outreach. Em-dash-free per outgoing-mail discipline.
+- **`prospects.md`**: three prospects, one `peer` (eligible for paraphrase exception), one `customer-dev` (verbatim required), one `peer` with thin substrate (should skip with `PROSPECT_THIN`).
+- **`drafts/`**: one peer-register draft with scored paraphrased citations + one customer-dev draft with strict verbatim.
+- **`refused/`**: describes what a score-0 refusal looks like (no draft file emitted; log entry only).
+- **`interview-log.jsonl`**: sample records showing the v0.2 audit log shape (`register` field + `icp_phrases_paraphrased[].score`).
 
 ## What each test case exercises
 
 | Test case | Validates |
 |---|---|
-| `prospects.md` → all rows have `register:` field | **HIGH 2** — operator-side gate; agent reads, does not classify |
-| `drafts/prospect-0001.md` (peer, scored paraphrase) | **HIGH 3** — semantic-preservation score 0/1/2 visible in metadata |
+| `prospects.md` → all rows have `register:` field | **HIGH 2**: operator-side gate; agent reads, does not classify |
+| `drafts/prospect-0001.md` (peer, scored paraphrase) | **HIGH 3**: semantic-preservation score 0/1/2 visible in metadata |
 | `drafts/prospect-0002.md` (customer-dev, verbatim) | v0 Surface-Compliance still holds in non-peer registers |
-| `refused/NOTES.md` (score-0 refusal scenario) | **HIGH 3 reject path** — `SEMANTIC_LOSS_IN_PARAPHRASE` skip-record shape |
-| `interview-log.jsonl` paraphrase-rate count | **HIGH 1** — Falsifier 7 yellow (>20%) / red (>35%) computable from log |
+| `refused/NOTES.md` (score-0 refusal scenario) | **HIGH 3 reject path**: `SEMANTIC_LOSS_IN_PARAPHRASE` skip-record shape |
+| `interview-log.jsonl` paraphrase-rate count | **HIGH 1**: Falsifier 7 yellow (>20%) / red (>35%) computable from log |
 
 ## How to read this fixture (no run required)
 
@@ -34,7 +34,7 @@ Computed paraphrase rate for this fixture: 1 peer / 2 total = 50%. **This exceed
 
 ## What this fixture does NOT cover
 
-- B-set generalization (OPEN-WORK item 6 — B-1-specific stance)
+- B-set generalization (OPEN-WORK item 6, B-1-specific stance)
 - Register transitions across follow-up chain (OPEN-WORK item 7)
 - Metadata-body register mismatch detection (OPEN-WORK item 4)
 - Em-dash + paraphrase tell-surface (OPEN-WORK item 8)

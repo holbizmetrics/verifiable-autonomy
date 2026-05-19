@@ -1,4 +1,4 @@
-# Ideal Customer Profile (ICP) — DevTrace v0.2-fixture variant
+# Ideal Customer Profile (ICP): DevTrace v0.2-fixture variant
 
 > **Synthetic ICP for v0.2 paraphrase-exception fixture.** Em-dash-free. Specific phrases below are written so paraphrase-vs-verbatim tension surfaces concretely.
 

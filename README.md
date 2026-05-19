@@ -30,7 +30,7 @@ The architectural fix is not better prompts or better models. It's a discipline 
 - Audit-log schema and worked examples
 - Cross-operator review templates
 - Rollback contract
-- B-set business-builder proposal (`B-PROPOSAL.md` — already in this repo, gated on the architecture proving itself first)
+- B-set business-builder proposal (`B-PROPOSAL.md`, already in this repo, gated on the architecture proving itself first)
 
 ## What this repo will NOT contain
 
@@ -41,7 +41,7 @@ The architectural fix is not better prompts or better models. It's a discipline 
 
 ## The honest scope
 
-The architecture exists in a research lab (PCLA — Prometheus Crystal Lab Auto). One track is flipped (A-3 closeout-auto). One more is in late-stage design review (A-1 phase-transition-auto, the substrate that closes the Surface-Compliance hole for every other track). The business-builder track set (B-1 through B-8) is a proposal, gated on the research-layer architecture proving itself first.
+The architecture exists in a research lab (PCLA, Prometheus Crystal Lab Auto). One track is flipped (A-3 closeout-auto). One more is in late-stage design review (A-1 phase-transition-auto, the substrate that closes the Surface-Compliance hole for every other track). The business-builder track set (B-1 through B-8) is a proposal, gated on the research-layer architecture proving itself first.
 
 This repo flips from private to public when at least two tracks have flipped step → auto, demonstrated their falsifiers don't fire, and survived cross-operator review at the cross-session-same-family rung minimum.
 

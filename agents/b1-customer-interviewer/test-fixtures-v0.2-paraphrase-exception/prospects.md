@@ -1,4 +1,4 @@
-# Prospects — v0.2 paraphrase-exception fixture
+# Prospects: v0.2 paraphrase-exception fixture
 
 > **Synthetic prospects, S55 (2026-05-19).** Three fictional founders with substrate snippets and register classifications. Tests the operator-side register gate (HIGH 2) and the paraphrase exception flow (HIGH 3).
 

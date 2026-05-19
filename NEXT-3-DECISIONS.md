@@ -2,7 +2,7 @@
 
 > **Not a Gantt. Not a roadmap.** Three calls that unblock everything downstream. When one resolves, this file updates. v1, S55 (2026-05-18).
 
-## Decision 1: Path A / B / C (early-access posture) — RESOLVED 2026-05-18 → Path B
+## Decision 1: Path A / B / C (early-access posture). RESOLVED 2026-05-18 → Path B
 
 **Resolved:** Path B. README amended in this commit; cap-of-5 invited early-access testers. `INVITATION-TEMPLATE.md` ready for operator-side use. `gh repo edit --add-collaborator` is the invite mechanism (manual, no tooling for N≤5).
 
@@ -37,7 +37,7 @@
 
 **Info needed (preconditions):**
 - ~~Decision 1 resolved (so the repo-link target exists).~~ ✓ Resolved → Path B.
-- Draft chosen from `drafts/prospect-0003.md` v1 / v2 / v2.1 — or rewrite. Stuart + Sarkar already drafted (`prospect-0001.md` + `prospect-0002.md`).
+- Draft chosen from `drafts/prospect-0003.md` v1 / v2 / v2.1, or rewrite. Stuart + Sarkar already drafted (`prospect-0001.md` + `prospect-0002.md`).
 - Contact actually found (Substack DM, DEV profile, IH DM, or flowly.run contact).
 - Operator-side warm-reply workflow ready (replies go where, who classifies). Pointer at repo root still TODO.
 
@@ -54,7 +54,7 @@
 **Owner:** operator (with cross-operator review owed before any amendment).
 
 **Info needed:**
-- A-1 phase-transition-auto flip status (in PCLA — currently late-stage design).
+- A-1 phase-transition-auto flip status (in PCLA, currently late-stage design).
 - B-1 campaign data: n≥2 real campaigns ran, falsifiers did not fire.
 - Cross-operator review verdict on B-1's discipline (currently only self-review).
 

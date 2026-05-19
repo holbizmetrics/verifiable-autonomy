@@ -1,12 +1,12 @@
-# B-1 Falsifier — What would prove this agent is broken
+# B-1 Falsifier: What would prove this agent is broken
 
 > **Pre-registered. Operator spot-checks against these. Any falsifier firing once = stop and investigate. Three fires across the same falsifier in one campaign = retire B-1 v0; do not flip back to "trust the agent."**
 
 ## Why pre-register
 
-A falsifier-after-the-fact rationalizes whatever happened. A falsifier-before-the-fact gives you a real check. The headline failure mode B-1 exists to prevent — "agent claims work it didn't do" — is invisible from agent output alone (the output IS the work). So the falsifiers below are operator-side checks against the log + drafts, not agent-side checks.
+A falsifier-after-the-fact rationalizes whatever happened. A falsifier-before-the-fact gives you a real check. The headline failure mode B-1 exists to prevent ("agent claims work it didn't do") is invisible from agent output alone (the output IS the work). So the falsifiers below are operator-side checks against the log + drafts, not agent-side checks.
 
-## Falsifier 1 — Fabricated ICP citation (HEADLINE)
+## Falsifier 1: Fabricated ICP citation (HEADLINE)
 
 **Pattern:** A `draft_emitted` log record names ICP phrases in `icp_phrases_cited`, but those phrases are NOT verbatim present in `icp.md` at the time of that log record's timestamp.
 
@@ -24,15 +24,15 @@ jq -r 'select(.action=="draft_emitted") | .icp_phrases_cited[]' interview-log.js
 
 **If this fires:** B-1 is fabricating audit trail. Stop using v0. The Surface-Compliance discipline failed at the agent layer. This is the headline risk that justifies the whole design.
 
-## Falsifier 2 — Fabricated prospect context
+## Falsifier 2: Fabricated prospect context
 
 **Pattern:** A draft mentions a fact about the prospect (recent funding round, blog post URL, conference talk, role change) that does NOT appear in their `prospects.md` row.
 
 **Check:** spot-check 5 random drafts per campaign. For each fact in the draft body, verify it has substrate in the prospect's row.
 
-**If this fires:** Same as Falsifier 1 — agent is inventing. Retire v0.
+**If this fires:** Same as Falsifier 1: agent is inventing. Retire v0.
 
-## Falsifier 3 — Should-have-skipped-but-didn't
+## Falsifier 3: Should-have-skipped-but-didn't
 
 **Pattern:** `prospects.md` contains rows with thin or template-only substrate (no real `substrate-snippet`). B-1 drafts against them anyway with generic content.
 
@@ -46,15 +46,15 @@ drafts_emitted=$(jq -r 'select(.action=="draft_emitted")' interview-log.jsonl | 
 
 **If this fires:** B-1 is hitting target N at the cost of draft quality. The skip mechanism failed.
 
-## Falsifier 4 — Reply-rate dramatically below baseline
+## Falsifier 4: Reply-rate dramatically below baseline
 
-**Pattern:** Sent N=20 drafts, got <1 reply (interested/objection/no — anything substantive). Generic-template outreach baseline is ~2-5% reply on cold; B-1's whole reason for existing is to beat that via personalization.
+**Pattern:** Sent N=20 drafts, got <1 reply (interested/objection/no, anything substantive). Generic-template outreach baseline is ~2-5% reply on cold; B-1's whole reason for existing is to beat that via personalization.
 
 **Threshold:** <1% reply rate over n ≥ 30 sent. Single-prospect noise excluded; this is a campaign-level signal.
 
-**If this fires:** The drafts are either not landing OR the ICP itself is mis-targeted. Falsifier 4 can't distinguish those alone — it's a "stop and inspect" trigger, not a "B-1 is definitely broken" verdict.
+**If this fires:** The drafts are either not landing OR the ICP itself is mis-targeted. Falsifier 4 can't distinguish those alone; it's a "stop and inspect" trigger, not a "B-1 is definitely broken" verdict.
 
-## Falsifier 5 — Operator-side correction rate > 50%
+## Falsifier 5: Operator-side correction rate > 50%
 
 **Pattern:** Operator rejects or substantially rewrites >50% of drafts before sending.
 
@@ -62,7 +62,7 @@ drafts_emitted=$(jq -r 'select(.action=="draft_emitted")' interview-log.jsonl | 
 
 **If this fires:** B-1's drafts aren't operator-aligned. The ICP may need tightening, the prospect substrate may need richer snippets, or the agent's draft format isn't right for the operator's voice. Inspect; don't auto-retire.
 
-## Falsifier 6 — Log corruption / non-append writes
+## Falsifier 6: Log corruption / non-append writes
 
 **Pattern:** `interview-log.jsonl` shows records out-of-timestamp-order, or a line that was clearly edited rather than appended (e.g. a record's timestamp matches an earlier action but the contents differ).
 
@@ -70,7 +70,7 @@ drafts_emitted=$(jq -r 'select(.action=="draft_emitted")' interview-log.jsonl | 
 
 **If this fires:** The agent isn't honoring append-only. Any audit-trail integrity claim is broken until fixed.
 
-## Falsifier 7 — Paraphrase-rate drift (S55 amendment, v0.2 per windows-claude HIGH 1)
+## Falsifier 7: Paraphrase-rate drift (S55 amendment, v0.2 per windows-claude HIGH 1)
 
 **Pattern:** The peer-register paraphrase exception is invoked too often across a campaign. The exception was scoped to genuine peer-builder outreach; widespread use indicates either (a) ICP/prospect-list misclassification, (b) register-discipline drift back toward template-shaped output dressed up as paraphrase, or (c) most "prospects" are actually peers (which would change campaign strategy).
 
@@ -82,7 +82,7 @@ paraphrased=$(jq -r 'select(.action=="draft_emitted" and .register=="peer")' int
 echo "Peer-register rate: $paraphrased / $total"
 ```
 
-**Two-tier threshold** (revised down from 50% per windows-claude review: 50% means half the campaign is already paraphrased before any alarm fires — too late):
+**Two-tier threshold** (revised down from 50% per windows-claude review: 50% means half the campaign is already paraphrased before any alarm fires, too late):
 
 - **Yellow zone (early warning):** >20% over n ≥ 10 drafts. Operator pre-send review required on the next 5 peer-register drafts. Inspect each: is the prospect genuinely a peer-builder, or is B-1 reclassifying to dodge verbatim discipline?
 - **Red zone (retirement trigger):** >35% over n ≥ 10 drafts. The exception is being abused or the prospect list is mis-targeted. Retire the exception, restore strict verbatim across the campaign, retire any drafts emitted under the exception pending operator re-review.
@@ -121,4 +121,4 @@ That last one is the genuine residual risk. The operator-supervised v0 design sa
 
 ---
 
-*Falsifier v1, S55 (2026-05-18). Pre-registered before first real campaign. Revise if a new failure mode is observed in practice — but the revision history stays in git, no silent rewrites.*
+*Falsifier v1, S55 (2026-05-18). Pre-registered before first real campaign. Revise if a new failure mode is observed in practice; the revision history stays in git, no silent rewrites.*

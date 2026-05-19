@@ -1,4 +1,4 @@
-# B-1 — Customer Interview Runner
+# B-1: Customer Interview Runner
 
 > **Operator-supervised customer-discovery agent.** Drafts personalized outreach grounded in a real ICP + real prospect substrate. Classifies replies. Maintains append-only audit log. Never sends email. Never invents prospects. Refuses to draft against thin substrate.
 
@@ -27,7 +27,7 @@ The agent's draft quality is upper-bounded by this file. Vague ICP → generic d
 
 ### 3. Fill in your prospects
 
-Edit `prospects.md`. For each prospect, include **one verbatim substrate snippet** — a sentence from their public material (blog, bio, post, talk) that makes them specifically them. Generic role descriptions are not enough; the agent will skip those rows.
+Edit `prospects.md`. For each prospect, include **one verbatim substrate snippet**: a sentence from their public material (blog, bio, post, talk) that makes them specifically them. Generic role descriptions are not enough; the agent will skip those rows.
 
 ### 4. Invoke B-1
 
@@ -115,7 +115,7 @@ Prints campaign stats: drafts emitted, sent, replies, bucket counts, conversion 
 ## What you (operator) should do periodically
 
 1. **Spot-check drafts against substrate.** Pick 3 random drafts. Open `icp.md` + the prospect row. Are the cited phrases actually present verbatim? (See Falsifier 1.)
-2. **Watch reply rates.** If <1% over n ≥ 30 sent, stop the campaign — either ICP is mis-targeted or drafts aren't landing. (See Falsifier 4.)
+2. **Watch reply rates.** If <1% over n ≥ 30 sent, stop the campaign: either ICP is mis-targeted or drafts aren't landing. (See Falsifier 4.)
 3. **Watch your own edit rate.** Rewriting >50% of drafts means the ICP needs sharpening or the agent's voice isn't yours. (See Falsifier 5.)
 
 Full falsifier list: `falsifier.md`.
@@ -133,7 +133,7 @@ v0.1: `mark-sent` mode (agent appends the record for you given a prospect ID).
 v0.2: Reply ingestion from IMAP folder (operator-approved per-fetch).
 v0.3: Per-campaign metrics dashboard (operator dashboard, not agent autonomy).
 v0.4: Multi-campaign support (per-ICP subdirectories).
-v1: When falsifiers haven't fired across n ≥ 2 campaigns, consider auto-mode flip — but only after a falsifier-per-track audit log proves the discipline holds.
+v1: When falsifiers haven't fired across n ≥ 2 campaigns, consider auto-mode flip, but only after a falsifier-per-track audit log proves the discipline holds.
 
 The v1 flip mirrors the PCLA mode-toggle contract (research-lab discipline): `mode: step` until proven; never auto-send without explicit operator authorization per fire.
 

@@ -22,7 +22,7 @@ agents/<agent-name>/
   replies/                  # operator-collected inputs (gitignored)
   test-fixtures/            # frozen self-vs-self smoke-test (committed)
   OPEN-WORK-*.md            # tracked open work from cross-op reviews
-  interview-log.jsonl       # append-only audit log (gitignored — contains real prospect data)
+  interview-log.jsonl       # append-only audit log (gitignored, contains real prospect data)
 ```
 
 The agent's runtime contract lives one level up at `.claude/agents/<agent-name>.md` (Claude Code reads it from there).
@@ -42,7 +42,7 @@ From the repo manifesto (`../README.md`) + B-set proposal (`../B-PROPOSAL.md`):
 
 Copy `b1-customer-interviewer/`'s shape. Adapt the falsifier to that agent's failure surface. Decide per-amendment whether B-1's paraphrase exception generalizes (current stance: B-1-specific; see `b1-customer-interviewer/OPEN-WORK-paraphrase-exception.md` item 6).
 
-Do NOT copy the runtime substrate (icp.md, prospects.md, drafts/, replies/, log) — those are operator-filled per-agent.
+Do NOT copy the runtime substrate (icp.md, prospects.md, drafts/, replies/, log); those are operator-filled per-agent.
 
 ## Cross-references
 
