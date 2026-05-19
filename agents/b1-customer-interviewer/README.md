@@ -99,7 +99,9 @@ Prints campaign stats: drafts emitted, sent, replies, bucket counts, conversion 
 | `replies/<prospect_id>.md` | Reply text from operator's inbox | Operator |
 | `falsifier.md` | Pre-registered failure modes | Pre-existing |
 | `README.md` | This file | Pre-existing |
-| `test-fixtures/` | Self-vs-self smoke-test archive (DevTrace ICP + Marcus/Priya/Tom prospects + drafts + reply + log) | S55 smoke-test (frozen) |
+| `test-fixtures/` | Self-vs-self smoke-test archive (DevTrace ICP + Marcus/Priya/Tom prospects + drafts + reply + log) | S55 smoke-test (frozen, v0 baseline) |
+| `test-fixtures-v0.2-paraphrase-exception/` | Validation substrate for v0.2 amendment (register-from-prospects, score 0/1/2, Falsifier 7) | S55 v0.2 amendment fixture |
+| `OPEN-WORK-paraphrase-exception.md` | MED/LOW items deferred from v0.2 cross-review with per-item revisit triggers | S55 v0.2 amendment open work |
 
 ## What B-1 will refuse to do
 
