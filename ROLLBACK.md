@@ -4,25 +4,26 @@
 
 This document is the repo-level rollback contract. Per-agent rollback triggers live in each agent's `falsifier.md`.
 
-## Current scope (v0, S55)
+## Current scope (v0.2, S55)
 
-**Nothing in this repo is currently in `auto` mode.** B-1 is operator-supervised end-to-end. The "rollback" surface today is therefore:
+**Nothing in this repo is currently in `auto` mode.** B-1 is in `step` (operator-supervised). The MODE contract (`MODE-CONTRACT.md`) is live as of 2026-05-19; B-1's `MODE` file + `flip-history.jsonl` are the killswitch primitive. The rollback surface today:
 
-- **Retire B-1 v0 entirely.** Stop using the agent. The audit log remains as historical record.
+- **Flip B-1 to `paused`.** `/agents b1-customer-interviewer flip-mode paused`. Refuses all invocations except `status | inspect | flip-mode`. Audit log preserved.
+- **Retire B-1 entirely.** Stop using the agent. MODE + history + audit-log remain as historical record.
 - **Retire a single campaign.** Mark `campaign_closed` in `interview-log.jsonl`. New invocations skip closed campaigns.
 - **Retire the paraphrase exception** (per Falsifier 7). Restore strict verbatim; re-review prior peer-register drafts.
 
-There is no `auto` track in this repo to flip back. The PCLA research lab has one A-track in `auto` (A-3 closeout-auto); rollback there is governed by PCLA's own rollback contract.
+There is no `auto` track in this repo to flip back yet. The PCLA research lab has one A-track in `auto` (A-3 closeout-auto); rollback there is governed by PCLA's own rollback contract.
 
 ## What rollback means when B-1 v1 ships (future)
 
-B-1 v1 is the candidate first `auto` track in this repo (v0 is `step`-only; v1 considers auto-mode after falsifiers hold across n ≥ 2 campaigns per the B-1 README roadmap).
+B-1 v1 is the candidate first `auto` track in this repo (v0.2 is `step`; v1 considers `auto` after falsifiers hold across n ≥ 2 campaigns per the B-1 README roadmap).
 
 When B-1 flips `step → auto`:
 
-1. **Killswitch command (single).** A repo-level command takes B-1 back to `step` without losing audit history. Proposed shape: a file flag `agents/b1-customer-interviewer/MODE` containing `step` or `auto`. B-1 reads this on every invocation; defaults to `step` if absent or unparseable.
-2. **Per-track rollback triggers (pre-registered).** B-1's `falsifier.md` already lists the failure modes. Any falsifier firing = flip back to `step` automatically. The agent itself refuses to operate in `auto` mode when its most recent campaign has a falsifier-fire on record.
-3. **Audit-log preservation.** Rollback never edits the log. Append a `mode_changed` record with the trigger (`falsifier_fire | operator_killswitch | scheduled_retirement`). Past records remain readable.
+1. **Killswitch primitive (LIVE since v0.2).** `MODE-CONTRACT.md` defines the per-agent `MODE` file + `flip-history.jsonl` journal. `/agents b1-customer-interviewer flip-mode step` (or `paused`) is the single command. Audit-log untouched.
+2. **Per-track rollback triggers (pre-registered).** B-1's `falsifier.md` lists the failure modes. Any falsifier-fire = automatic flip-back to `step` via the same MODE primitive. The agent refuses to operate in `auto` when its most recent campaign has a falsifier-fire on record.
+3. **Audit-log preservation.** Rollback appends to `flip-history.jsonl` and (separately) does not touch `interview-log.jsonl`. Both journals are append-only. Past records remain readable.
 
 ## Per-agent rollback triggers (pre-registered)
 
@@ -47,4 +48,4 @@ Future B-N agents must ship a `falsifier.md` before any `step → auto` consider
 
 ---
 
-*Rollback contract v1, S55 (2026-05-18). v0 scope is retirement, not mode-flip. Updates when first `auto` track ships.*
+*Rollback contract v1.1, S55 (2026-05-19). MODE primitive live; v0.2 scope is `step | paused | retire`. `auto` arrives with B-1 v1.*

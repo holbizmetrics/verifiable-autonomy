@@ -16,6 +16,8 @@ Each agent directory follows the same shape:
 agents/<agent-name>/
   README.md                 # operator-facing quickstart + workflow
   falsifier.md              # pre-registered failure modes (load-bearing)
+  MODE                      # current mode: step | auto | paused (committed; default step)
+  flip-history.jsonl        # append-only journal of MODE transitions (committed)
   *-template.md             # blank operator-fillable substrate templates
   *.md                      # operator-filled real substrate (gitignored)
   drafts/                   # agent output (gitignored)
@@ -24,6 +26,8 @@ agents/<agent-name>/
   OPEN-WORK-*.md            # tracked open work from cross-op reviews
   interview-log.jsonl       # append-only audit log (gitignored, contains real prospect data)
 ```
+
+The MODE + flip-history pair is the per-agent execution-policy contract. See `../MODE-CONTRACT.md` for the read-discipline, the flip transition rules, and the falsifier-fire automatic flip-back. Every agent must implement the boot-check before doing any work.
 
 The agent's runtime contract lives one level up at `.claude/agents/<agent-name>.md` (Claude Code reads it from there).
 
@@ -37,6 +41,7 @@ From the repo manifesto (`../README.md`) + B-set proposal (`../B-PROPOSAL.md`):
 4. **No autonomous send / no autonomous external action.** v0 is operator-supervised end-to-end. Auto-mode considered only after falsifiers hold across n ≥ 2 real campaigns + cross-operator review.
 5. **Operator-side classification gates.** Where the agent could grant itself permissive license (e.g. peer-register paraphrase exception), the gate lives in operator-curated substrate, not in agent self-classification. See B-1's `register:` field on prospect rows for the canonical pattern (S55 amendment v0.2).
 6. **Open work tracked, not hidden.** Cross-op review items that don't land in v0.N are written to `OPEN-WORK-*.md` with explicit revisit triggers, not deferred to memory.
+7. **MODE contract (per-agent execution policy).** Every agent ships a `MODE` file (defaults `step`) and a `flip-history.jsonl` journal. Boot-check runs every invocation. `step → auto` requires falsifier-clean + cross-op review + operator confirmation. See `../MODE-CONTRACT.md`.
 
 ## When B-2 (or any future B-N) ships
 
@@ -54,4 +59,4 @@ Do NOT copy the runtime substrate (icp.md, prospects.md, drafts/, replies/, log)
 
 ---
 
-*v1, S55 (2026-05-18). One agent shipped. Pattern document for future B-N.*
+*v1.1, S55 (2026-05-19). One agent shipped. MODE contract live: per-agent `MODE` + `flip-history.jsonl`.*
