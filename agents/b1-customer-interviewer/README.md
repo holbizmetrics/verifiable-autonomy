@@ -4,7 +4,7 @@
 
 ## Status
 
-**v0 (S55, 2026-05-18).** First working version. Operator-supervised end-to-end. No SMTP, no auto-send, no cron, no autonomous fire. The agent drafts; you send.
+**v0.1 (S55, 2026-05-19).** Adds `mark-sent` mode (operator-driven sent-record append). Still operator-supervised end-to-end. No SMTP, no auto-send, no cron, no autonomous fire. The agent drafts; you send.
 
 ## Quickstart
 
@@ -60,13 +60,13 @@ Read each draft in `drafts/`. Check:
 
 ### 6. Send manually + mark sent
 
-Send approved drafts from your own email client. For each sent, append a `marked_sent` record to the log. The simplest way:
+Send approved drafts from your own email client. For each sent, mark it in the log:
 
-```bash
-echo '{"timestamp":"'$(date -u +%FT%TZ)'","mode":"operator_mark","action":"marked_sent","prospect_id":"prospect-0007","sent_at":"'$(date -u +%FT%TZ)'"}' >> interview-log.jsonl
+```
+/agents b1-customer-interviewer mark-sent prospect-0007
 ```
 
-(Future v0.x: B-1 will add a `mark-sent` mode that takes a prospect ID and appends the record for you. For now manual is fine.)
+B-1 refuses if there's no `draft_emitted` for that prospect, or if a `marked_sent` already exists (append-only discipline). The manual `echo '{...}' >> interview-log.jsonl` fallback still works if you need it, but `mark-sent` is the preferred path as of v0.1.
 
 ### 7. Drop replies + classify
 
@@ -127,9 +127,9 @@ Full falsifier list: `falsifier.md`.
 
 ## Roadmap (v0.x → v1)
 
-v0 (now): operator-supervised draft + classify + status; manual send + manual reply ingestion.
+v0: operator-supervised draft + classify + status; manual send + manual reply ingestion.
 
-v0.1: `mark-sent` mode (agent appends the record for you given a prospect ID).
+v0.1 (now): `mark-sent` mode (agent appends the record for you given a prospect ID).
 v0.2: Reply ingestion from IMAP folder (operator-approved per-fetch).
 v0.3: Per-campaign metrics dashboard (operator dashboard, not agent autonomy).
 v0.4: Multi-campaign support (per-ICP subdirectories).

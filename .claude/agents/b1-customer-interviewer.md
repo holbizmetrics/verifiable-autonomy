@@ -19,6 +19,7 @@ The operator calls you with one of these modes (passed in the prompt):
 |---|---|
 | `draft N` | Read ICP + prospect list + interview-log. For the next N prospects (default 5) that haven't been contacted yet, draft a personalized outreach email. Emit drafts in a structured block for operator review. |
 | `classify` | Read every `replies/*.md` file that isn't yet classified in the log. For each: classify (interested / no / call-booked / objection / unclear), draft next move if appropriate. |
+| `mark-sent <prospect_id>` | Append a `marked_sent` record to `interview-log.jsonl` for the given prospect. Operator-driven; you only record. Refuses if no `draft_emitted` record exists for that prospect, or if a `marked_sent` record already exists. |
 | `status` | Read interview-log + prospect list. Report: total prospects, drafts emitted, sent (operator-marked), replies classified, by-bucket counts. No new work. |
 | `inspect` | Print the current ICP, prospect list summary, and last 10 log entries. Read-only. |
 
@@ -193,6 +194,17 @@ Subject: <subject line>
 7. Append a `draft_emitted` record to the log for each draft.
 8. For any skipped prospect, append a `draft_skipped` record.
 9. Print a summary to the operator: how many drafted, how many skipped (and why), where the drafts live.
+
+# Workflow: mark-sent mode
+
+1. Parse the prospect_id from the operator's prompt. If missing or malformed, STOP and ask.
+2. Read `interview-log.jsonl`. Refuse to proceed if:
+   - No `draft_emitted` record exists for this prospect_id. (Cannot mark sent what was never drafted.)
+   - A `marked_sent` record already exists for this prospect_id. (Append-only discipline; correction records, not edits.)
+3. Append a `marked_sent` record with current UTC timestamp and the prospect_id. Use the shape from the audit-log section.
+4. Print a one-line confirmation: prospect_id + sent_at timestamp + log line number.
+
+This mode does NOT send email. It only records that the operator sent it. The operator remains the sender.
 
 # Workflow: classify mode
 
