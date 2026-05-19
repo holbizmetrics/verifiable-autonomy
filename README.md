@@ -23,6 +23,29 @@ The architectural fix is not better prompts or better models. It's a discipline 
 5. **Cross-operator review before flip.** Within-session self-review is the lowest rung of verification. Each flip to `auto` requires verification from a different session, ideally a different model family. Rung register is explicit; rungs not yet discharged are named, not hidden.
 6. **Rollback contract.** A single command takes all tracks back to `step`. Per-track rollback triggers are pre-registered. The killswitch exists before flip, not after the first failure.
 
+## The two layers
+
+The discipline above is not specific to per-email tactics or per-draft choices. It operates at every layer of the work, just at different time-scales.
+
+This repo embodies the discipline at the **execution layer**: agents drafting outreach, classifying replies, marking sends. Per-action audit records. Per-agent falsifiers. Per-agent `MODE` files. Operator-supervised by default.
+
+The **strategic layer** is currently operated by hand. The Prometheus Crystal Lab Auto research repo (PCLA) is its audit-trail:
+
+- **Strategic audit-trail.** PCLA mirror logs (one per session continuation, every architectural decision recorded with rationale + commit-hash citation) play the role `interview-log.jsonl` plays for execution.
+- **Strategic falsifiers (pre-registered).** `B-PROPOSAL.md`'s hard prereqs ("A-1 must land, ≥2 PCLA tracks demo-stable, hosted-infra funded") are pre-registered falsifiers on the strategic move to ship B-2 through B-8. Same shape as B-1's Falsifier 1-7, longer time-scale.
+- **Strategic cross-operator review.** Architectural amendments (e.g., v0.2 paraphrase exception) get reviewed by a parallel Claude session in a different environment before landing. Same shape as B-1's per-campaign cross-op, applied to architecture instead of drafts.
+- **Strategic MODE contract.** PCLA's `modes.yaml` is the same primitive as B-1's per-agent `MODE` file, scoped to research tracks instead of execution agents.
+- **Strategic Surface-Compliance.** Commits cite substrate (prior decisions, commit hashes, mirror-log pointers) the same direction as B-1 drafts cite verbatim from `icp.md`. Less rigorous surface; same architectural intent.
+
+The two repos are coupled, not parallel:
+
+- **verifiable-autonomy** = execution-layer agents
+- **prometheus-crystal-lab-auto** = strategic-layer audit-trail + falsifier register + cross-op review log
+
+**What this implies for the roadmap.** v1.0 is not "when the operator-amplifier ships." v1.0 is **when the execution-layer agents catch up to the strategic-layer discipline that already runs by hand.** The path from there to "autonomous business-builder" is not adding a future layer; it is gradually shifting load from operator-exercises-strategic-discipline to S-tier-agent-exercises-strategic-discipline-with-operator-review. Same architecture, longer-horizon falsifiers, higher rungs of evidence per flip.
+
+The product is the discipline. The agents are embodiments of it at progressively higher layers.
+
 ## What this repo will contain (when public)
 
 - The track-and-gate architecture as a reference pattern
@@ -41,9 +64,9 @@ The architectural fix is not better prompts or better models. It's a discipline 
 
 ## The honest scope
 
-The architecture exists in a research lab (PCLA, Prometheus Crystal Lab Auto). One track is flipped (A-3 closeout-auto). One more is in late-stage design review (A-1 phase-transition-auto, the substrate that closes the Surface-Compliance hole for every other track). The business-builder track set (B-1 through B-8) is a proposal, gated on the research-layer architecture proving itself first.
+The architecture runs at two scales today. **Execution layer (this repo):** B-1 customer-interview-runner shipped at v0.2 (S55, 2026-05-19). MODE contract live; first per-agent `MODE` file in step. **Strategic layer (PCLA, the coupled research repo):** A-3 closeout-auto in `auto`, A-1 phase-transition-auto in late design review. The B-set execution-track proposal (B-2 through B-8) is gated on pre-registered strategic falsifiers in `B-PROPOSAL.md`.
 
-This repo flips from private to public when at least two tracks have flipped step → auto, demonstrated their falsifiers don't fire, and survived cross-operator review at the cross-session-same-family rung minimum.
+This repo flips from private to public when at least two execution-tracks have flipped step → auto, demonstrated their falsifiers don't fire, and survived cross-operator review at the cross-session-same-family rung minimum.
 
 Until then: this README is the manifesto. Early-access testers are the first real-world probe. The public proof is owed.
 
@@ -59,10 +82,11 @@ To be determined at public-flip time. Likely a permissive license for the archit
 - Active path-decision context: `NEXT-3-DECISIONS.md`
 - Rollback contract: `ROLLBACK.md`
 - Agents (currently shipped + pattern for B-N): `agents/README.md`
-- Research lab (private): `prometheus-crystal-lab-auto`
+- Strategic-layer audit-trail (coupled research repo, private): `prometheus-crystal-lab-auto`
+- MODE contract (per-agent execution-policy primitive): `MODE-CONTRACT.md`
 - Honest review of the competing pattern (Polsia): https://crevio.co/blog/is-polsia-legit
 - B-set proposal: see `B-PROPOSAL.md` in this repo
 
 ---
 
-*v1, S55 (2026-05-18). Private. Flips public when proof lands.*
+*v1.1, S55 (2026-05-19). Private. Two-layer reframe added: execution layer (this repo) + strategic layer (PCLA, by-hand today). Flips public when proof lands.*
