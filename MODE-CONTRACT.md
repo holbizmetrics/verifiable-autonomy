@@ -88,7 +88,7 @@ When an agent in `auto` detects one of its own pre-registered falsifier-fire con
 2. Surface a one-line summary to the operator (or the next operator who reads the log).
 3. Refuse further work until the operator acknowledges and either repairs the substrate or retires the agent.
 
-The flip-back is the killswitch in the steady state. The repo-level "single command" killswitch (`./killswitch all`, future) is a convenience layer over the same primitive: it iterates every agent and invokes `flip-mode step`.
+The flip-back is the killswitch in the steady state. The repo-level "single command" killswitch (`./killswitch all`) is a convenience layer over the same primitive: it iterates every agent and, for any agent not already in `step`, appends one flip-history record and overwrites `MODE` to `step`.
 
 ## Cross-references
 

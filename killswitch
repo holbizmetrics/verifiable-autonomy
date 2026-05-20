@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Repo-level killswitch — flip every agent to `step`.
+#
+# Convenience layer over the per-agent flip primitive (MODE file +
+# append-only flip-history.jsonl). Iterates every directory under
+# agents/ that contains a MODE file. For each agent currently in
+# `step`, this is a no-op. For each agent in `auto` or `paused`,
+# it overwrites MODE to `step` and appends one flip-history record.
+#
+# Usage: ./killswitch all
+#
+# The `all` argument is required, on purpose, to keep a typo from
+# triggering a repo-wide flip.
+#
+# See MODE-CONTRACT.md for the underlying contract.
+
+set -euo pipefail
+
+if [[ "${1:-}" != "all" ]]; then
+  echo "usage: $0 all" >&2
+  exit 2
+fi
+
+repo_root="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+agents_dir="$repo_root/agents"
+
+if [[ ! -d "$agents_dir" ]]; then
+  echo "killswitch: no agents/ directory at $agents_dir" >&2
+  exit 1
+fi
+
+ts="$(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+flipped=0
+already=0
+missing=0
+
+for agent_path in "$agents_dir"/*/; do
+  [[ -d "$agent_path" ]] || continue
+  agent="$(basename "$agent_path")"
+  mode_file="$agent_path/MODE"
+  history_file="$agent_path/flip-history.jsonl"
+
+  if [[ ! -f "$mode_file" ]]; then
+    echo "[skip] $agent: no MODE file"
+    missing=$((missing + 1))
+    continue
+  fi
+
+  current="$(tr -d '[:space:]' < "$mode_file")"
+  if [[ "$current" == "step" ]]; then
+    echo "[noop] $agent: already step"
+    already=$((already + 1))
+    continue
+  fi
+
+  record=$(printf '{"timestamp":"%s","agent":"%s","from_mode":"%s","to_mode":"step","trigger":"operator_killswitch","authorized_by":"operator","falsifier_status":"n/a (killswitch all — repo-wide flip-back to step)","cross_op_review":"n/a (killswitch is always-allowed per MODE-CONTRACT)","note":"./killswitch all"}' \
+    "$ts" "$agent" "$current")
+  printf '%s\n' "$record" >> "$history_file"
+  printf 'step\n' > "$mode_file"
+  echo "[flip] $agent: $current -> step"
+  flipped=$((flipped + 1))
+done
+
+echo
+echo "killswitch summary: flipped=$flipped already-step=$already missing-MODE=$missing"
