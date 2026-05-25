@@ -18,18 +18,19 @@ Per `factory/SPEC.md` § Working protocol. These 4 steps exist because this exac
 
 4. **"No in-session move" is a valid answer.** When asked "what's next" and there's no in-session move, the correct output is *"the move is yours"* — **not** substrate-polish, doc-tidying, or scaffolding more layers.
 
-## State as of 2026-05-25
+## State as of 2026-05-26
 
 - **Level-0 instances deployed with value→capture loop:** 0 of needed 1.
+- **Level-0 instance in flight:** `instances/agent-audit-consulting/` — spec locked (4 axes), landing + intake + operator-actions written in-session; deploy + Stripe link + test-loop verify = operator-bound, see `instances/agent-audit-consulting/OPERATOR-ACTIONS.md`.
 - **Factory layer (`factory/`):** scaffolded prematurely (spec says don't build until ≥2 instances exist); kept as substrate, not advanced until base case done.
-- **Concrete business-desire:** not yet named by operator.
 
-Until the operator names a concrete desire, the in-session move is **interview to clarify** (per SPEC § Input) or **stop and say the move is yours**.
+In-session move = advance the in-flight instance toward done-condition where steps are not operator-bound. If all remaining steps are operator-bound, the correct output is *"the move is yours"*.
 
 ## Repo map
 
 - `factory/SPEC.md` — authoritative
 - `factory/factory.py`, `factory/specs/`, `factory/README.md` — premature factory scaffold; do not advance until base case exists
+- `instances/agent-audit-consulting/` — Level-0 instance in flight (AI-agent audit consulting)
 - `agents/b1-customer-interviewer/` — B-1 primitive (talk-to-customer); the one primitive partially built
 - `B-PROPOSAL.md`, `ROADMAP.md`, `README.md` — repo framing docs (factory-frame corrected in commit 69e0b51)
 - `OPEN-WORK-doc-staleness.md` — known recurring failure mode

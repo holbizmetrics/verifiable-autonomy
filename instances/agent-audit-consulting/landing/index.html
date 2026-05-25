@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI-Agent Audit</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { max-width: 640px; margin: 4rem auto; padding: 0 1.5rem; font: 1rem/1.6 system-ui, -apple-system, sans-serif; color: #222; }
+  h1 { font-size: 1.6rem; line-height: 1.3; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.1rem; margin-top: 2rem; }
+  .price { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.5rem; }
+  .promise { font-style: italic; color: #555; margin-bottom: 2rem; }
+  .buy { display: inline-block; background: #111; color: #fff; padding: 0.9rem 1.8rem; text-decoration: none; border-radius: 4px; font-weight: 600; }
+  .buy:hover { background: #333; }
+  hr { border: 0; border-top: 1px solid #eee; margin: 3rem 0; }
+  ul { padding-left: 1.4rem; }
+  small { color: #888; }
+</style>
+</head>
+<body>
+
+<h1>Done-for-you audit of your AI-agent setup.</h1>
+
+<p>We review your prompts, your tool wiring, and your audit logs; produce a written report naming every place an agent could hallucinate without you catching it; pre-register the failure modes you should be grepping for.</p>
+
+<p class="price">$2,500 flat &mdash; one-time audit.</p>
+
+<p class="promise">If we find zero auditable risks in your current setup, the audit is free.</p>
+
+<a class="buy" href="{{STRIPE_CHECKOUT_URL}}">Book an audit &rarr;</a>
+
+<hr>
+
+<h2>What you send after paying</h2>
+<ul>
+  <li>Your prompts (files or a repo URL)</li>
+  <li>Your tool wiring (which tools the agent calls, how they're configured)</li>
+  <li>A recent slice of audit / conversation logs (24-48 hours is enough)</li>
+  <li>One sentence on what your agent is supposed to do</li>
+</ul>
+
+<h2>What you get back</h2>
+<ul>
+  <li>A written report (PDF or markdown) listing every place we found risk of unflagged hallucination, drift, or tool-misuse</li>
+  <li>A list of pre-registered failure modes &mdash; specific patterns to grep your future logs for</li>
+  <li>Turnaround: 5 business days from intake received</li>
+</ul>
+
+<h2>Refund</h2>
+<p>If we find zero auditable risks in your setup, the audit is free &mdash; full refund.</p>
+
+<hr>
+
+<p><small>Delivered async (written report only, no call). Substrate: <a href="https://github.com/holbizmetrics/verifiable-autonomy">verifiable-autonomy</a> (open-source).</small></p>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+{
+  "name": "agent-audit-consulting",
+  "agents": [
+    "b1-customer-interviewer"
+  ],
+  "mode": "step",
+  "icp": "Berlin Early AI-dopters (2026-06-17 attendees) with >=1 agent in some running state (prototype or prod)",
+  "scope_hours_max": 4,
+  "delivery_mode": "async-written-report-only",
+  "payment_timing": "pay-first-via-stripe-checkout",
+  "offer": {
+    "paragraph": "Done-for-you audit of your AI-agent setup. We review your prompts, your tool wiring, and your audit logs; produce a written report naming every place an agent could hallucinate without you catching it; pre-register the failure modes you should be grepping for.",
+    "price": "$2,500 flat for a one-time audit",
+    "promise": "If we find zero auditable risks in your current setup, the audit is free."
+  },
+  "_instance_dir": "instances/agent-audit-consulting/",
+  "_spec_locked": "2026-05-26"
+}
