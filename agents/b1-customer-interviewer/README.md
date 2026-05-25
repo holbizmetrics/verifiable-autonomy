@@ -4,7 +4,7 @@
 
 ## Status
 
-**v0.1 (S55, 2026-05-19).** Adds `mark-sent` mode (operator-driven sent-record append). Still operator-supervised end-to-end. No SMTP, no auto-send, no cron, no autonomous fire. The agent drafts; you send.
+**v0.2 (S55–S57); v0.3 amendment DRAFT (S58, 2026-05-25).** v0.1 added `mark-sent`; v0.2 added the paraphrase exception for `peer` register (Falsifier 7). v0.3 draft tightens F1 (git-archaeology-aware ICP grep), F3 (dedupe by prospect_id), F5 (correction_level field), F6 (event_ts vs log_ts) — surfaced by the 2026-05-25 falsifier sweep; awaiting cross-op review. Still operator-supervised end-to-end. No SMTP, no auto-send, no cron, no autonomous fire. The agent drafts; you send.
 
 ## Quickstart
 
@@ -129,11 +129,19 @@ Full falsifier list: `falsifier.md`.
 
 v0: operator-supervised draft + classify + status; manual send + manual reply ingestion.
 
-v0.1 (now): `mark-sent` mode (agent appends the record for you given a prospect ID).
-v0.2: Reply ingestion from IMAP folder (operator-approved per-fetch).
-v0.3: Per-campaign metrics dashboard (operator dashboard, not agent autonomy).
-v0.4: Multi-campaign support (per-ICP subdirectories).
-v1: When falsifiers haven't fired across n ≥ 2 campaigns, consider auto-mode flip, but only after a falsifier-per-track audit log proves the discipline holds.
+**Shipped:**
+- v0.1: `mark-sent` mode (agent appends the record for you given a prospect ID).
+- v0.2: paraphrase exception for `peer` register — Falsifier 7 (paraphrase-rate drift) + `register` field on `draft_emitted` + per-register paraphrase tolerances.
+
+**In flight:**
+- v0.3 (DRAFT, awaiting cross-op review): falsifier spec tightening — A (F1 git-archaeology-aware ICP grep), B (F3 dedupe by prospect_id), C (F5 correction_level field on `marked_sent`), D (F6 event_ts vs log_ts split with `retroactive` flag). Spec at `AMENDMENT-v0.3-DRAFT-falsifier-spec-tightening.md`.
+
+**Candidates (unranked):**
+- Reply ingestion from IMAP folder (operator-approved per-fetch).
+- Per-campaign metrics dashboard (operator dashboard, not agent autonomy).
+- Multi-campaign support (per-ICP subdirectories).
+
+**v1:** when falsifiers haven't fired across n ≥ 2 campaigns AND the falsifier-per-track audit log proves the discipline holds, consider auto-mode flip — per the MODE-contract gates in `../../MODE-CONTRACT.md`, not this README.
 
 The v1 flip mirrors the PCLA mode-toggle contract (research-lab discipline): `mode: step` until proven; never auto-send without explicit operator authorization per fire.
 
@@ -146,4 +154,4 @@ The v1 flip mirrors the PCLA mode-toggle contract (research-lab discipline): `mo
 
 ---
 
-*v0, S55 (2026-05-18). First B-track shipped. Operator-supervised. No autonomy claims that the audit log cannot verify.*
+*v0.2 shipped S55–S57; v0.3 amendment DRAFT S58 (2026-05-25). First B-track shipped. Operator-supervised. No autonomy claims that the audit log cannot verify.*
