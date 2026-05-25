@@ -1,6 +1,12 @@
 # B-set: Business-Builder Track Set: PROPOSAL
 
-> **Status: PROPOSAL. Not an active track set. Filed S55 (2026-05-18) to capture scope after Polsia competitive review. Implementation gated on A-1 landing + ≥2 PCLA tracks demo-stable + hosted-infra eng project funded. Do NOT begin B-track SPECs without re-reading hard prereqs § below.**
+> **Status: PROPOSAL. Not an active track set. Filed S55 (2026-05-18) to capture scope after Polsia competitive review. v1.1 framing correction S58 (2026-05-25): the B-set is the primitive set for ONE business instance, not the factory. Implementation gated on A-1 landing + ≥2 PCLA tracks demo-stable + hosted-infra eng project funded. Do NOT begin B-track SPECs without re-reading hard prereqs § below.**
+
+## Frame (read this first)
+
+The product is a **verifiable business factory** (`README.md` § "What this is", `ROADMAP.md`). This file scopes the **primitives** any one factory-instance composes — not the factory itself. Shipping all 8 B-tracks at autonomy gives you **one** automated business; it does not give you a factory. The factory layer (business-spec schema, orchestration, instance isolation, multi-tenant operator-attention router) is the layer **above** this file and does not yet exist anywhere in this repo.
+
+The recommended sequencing reflects this: do one whole business end-to-end first (V-A's own go-to-market is the dogfood case; M1–M6 milestones in `ROADMAP.md`), generalize to the factory after. Building the factory abstraction before one instance works is the drift trap — the open-ended "create a business" task has no built-in verifier and wanders. The M1–M6 milestones ARE the verifier the open-ended task is missing.
 
 ## Why this file exists
 
@@ -8,7 +14,7 @@ Polsia (https://polsia.com, launched Feb 2026, $49/mo + 20% rev-share) ships "AI
 
 The competitive opening: **autonomy without verification is what's failing in market.** PCLA's whole architecture is around audit + gates + rollback + cross-op review. That's precisely what Polsia is missing per the actual user reviews.
 
-This file scopes a Path-B track set that would instantiate PCLA's track-and-gate architecture for the business-builder use case. The differentiation is **not the agent inventory**: it's the falsifier + audit + rollback per track.
+This file scopes a Path-B primitive set that would instantiate PCLA's track-and-gate architecture for **one** business-builder instance. The differentiation is **not the agent inventory**: it's the falsifier + audit + rollback per primitive. (The factory layer that produces N such instances on demand is a separate, later concern — see § Frame above.)
 
 ## Track inventory (8 tracks, B-1 .. B-8)
 
@@ -53,7 +59,7 @@ This file scopes a Path-B track set that would instantiate PCLA's track-and-gate
 
 ## Right-sizing recommendation (load-bearing)
 
-**Don't build all 8 tracks.** Scope B-1 first, in PCLA-research mode, as proof that the falsifier-per-track pattern catches Surface-Compliance in soft work:
+**Don't build all 8 primitives in parallel; don't build the factory first either.** The drift-safe path is: one whole business instance end-to-end (the M1–M6 milestones in `ROADMAP.md`, using the primitives as they exist), THEN generalize the working instance into a factory. Scope B-1 first, in PCLA-research mode, as proof that the falsifier-per-track pattern catches Surface-Compliance in soft work:
 
 - Soft outputs (text), no money spent, no users hurt if it fails
 - Falsifier is the textbook Surface-Compliance test ("did the agent actually do the work it claims?")
@@ -91,4 +97,4 @@ The load-bearing claims here are:
 
 ---
 
-*PROPOSAL v1, S55 (2026-05-18). Filed after competitive review of Polsia. Re-read hard prereqs § before any B-track SPEC work begins. This file does NOT authorize implementation.*
+*PROPOSAL v1.1, S58 (2026-05-25). v1 filed S55 after competitive review of Polsia; v1.1 reframes the B-set as primitives for one factory-instance (not the factory itself). Re-read § Frame + hard prereqs before any B-track SPEC work begins. This file does NOT authorize implementation.*

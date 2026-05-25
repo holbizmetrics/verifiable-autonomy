@@ -10,6 +10,12 @@ In the interim, repo access is by invitation, capped at 5 early-access testers. 
 
 Early-access posture is reversible. Cap can be lowered, raised, or revoked at any time; no public footprint accrues. Invitation message includes a one-line don't-post-publicly clause until the proof-gate clears.
 
+## What this is
+
+A **verifiable business factory**: a system that, given a business spec, instantiates an automated business that runs without operator supervision and is auditable end-to-end. The product is the factory; each output is a separate automated business instance. The factory itself is mechanism-verifiable (did it deploy? are the audit logs balanced?); the business-success of each output stays dark-zone (the market verifies it, over time — that part stays with the operator, by design).
+
+The factory does not exist yet. V-A is currently building the **first instance** (V-A's own go-to-market) as the dogfood case the factory will generalize from. The B-tracks (`B-PROPOSAL.md`, B-1..B-8) are the **primitives** any one instance composes — they are not the factory. See `ROADMAP.md` for the M1–M6 first-instance milestones and the factory-vs-pattern-proof versioning.
+
 ## The thesis
 
 The AI-agent-runs-your-business market is currently shipping autonomy without verification. Users get generic output, hallucinated work, burned credits with nothing to show. The honest reviews (not the marketing) make this plain.
@@ -42,9 +48,16 @@ The two repos are coupled, not parallel:
 - **verifiable-autonomy** = execution-layer agents
 - **prometheus-crystal-lab-auto** = strategic-layer audit-trail + falsifier register + cross-op review log
 
-**What this implies for the roadmap.** v1.0 is not "when the operator-amplifier ships." v1.0 is **when the execution-layer agents catch up to the strategic-layer discipline that already runs by hand.** The path from there to "autonomous business-builder" is not adding a future layer; it is gradually shifting load from operator-exercises-strategic-discipline to S-tier-agent-exercises-strategic-discipline-with-operator-review. Same architecture, longer-horizon falsifiers, higher rungs of evidence per flip.
+**What this implies for the roadmap.** There are two distinct v1.0s, not one:
 
-The product is the discipline. The agents are embodiments of it at progressively higher layers.
+- **Pattern-proof v1.0:** ≥2 B-primitives step→auto with cross-op review + clean audit logs. The discipline holds for individual primitives. Necessary; not the product.
+- **Factory v1.0:** N≥3 automated business instances produced from a business-spec; each at falsifier-clean autonomy on mechanism; cross-op review of the *factory's* instantiation discipline (not just per-instance). This is the product.
+
+Between them sits **First-instance v1.0:** all M1–M6 milestones (`ROADMAP.md`) done; V-A's own business has paying customers and runs on the primitives. This is the dogfood case the factory generalizes from. Building the factory abstraction before this exists is the drift trap — open-ended "create a business" has no verifier, so it wanders; the M1–M6 milestones ARE the verifier the open-ended task is missing.
+
+The path from operator-exercises-strategic-discipline to factory is therefore: discipline pattern → one whole working instance → generalize to factory. Not: discipline pattern → factory abstraction → instances. The order matters.
+
+The product is the factory. The discipline is what makes its output trustable. The agents are how each instance does its work.
 
 ## What this repo will contain (when public)
 
@@ -64,9 +77,13 @@ The product is the discipline. The agents are embodiments of it at progressively
 
 ## The honest scope
 
-The architecture runs at two scales today. **Execution layer (this repo):** B-1 customer-interview-runner shipped at v0.2 (S55, 2026-05-19). MODE contract live; first per-agent `MODE` file in step. **Strategic layer (PCLA, the coupled research repo):** A-3 closeout-auto in `auto`, A-1 phase-transition-auto in late design review. The B-set execution-track proposal (B-2 through B-8) is gated on pre-registered strategic falsifiers in `B-PROPOSAL.md`.
+The architecture runs at two scales today. **Execution layer (this repo):** B-1 customer-interview-runner shipped at v0.2 (S55, 2026-05-19); v0.3 amendment DRAFT (S58, 2026-05-25). MODE contract live; first per-agent `MODE` file in step. **Strategic layer (PCLA, the coupled research repo):** A-3 closeout-auto in `auto`, A-1 phase-transition-auto in late design review. The B-primitive proposal (B-2 through B-8) is gated on pre-registered strategic falsifiers in `B-PROPOSAL.md`.
 
-This repo flips from private to public when at least two execution-tracks have flipped step → auto, demonstrated their falsifiers don't fire, and survived cross-operator review at the cross-session-same-family rung minimum.
+**First-instance state (M1–M6, `ROADMAP.md`):** M1 (ICP identified) and M4 (first contact) shipped. M2 (offer), M3 (landing page), M5 (first reply), M6 (first payment) not started. The dark-zone residue at M5/M6 is operator + market work, not Claude work.
+
+**Factory layer:** does not exist. No business-spec schema, no orchestration, no instance isolation. Naming it as the destination is not the same as designing it. The next-up factory work is M1–M6 on the dogfood instance, not a factory-design doc.
+
+This repo flips from private to public at pattern-proof v1.0 (≥2 primitives at auto, cross-op review clean). Factory public-flip is a distinct, later decision per `NEXT-3-DECISIONS.md`.
 
 Until then: this README is the manifesto. Early-access testers are the first real-world probe. The public proof is owed.
 
@@ -89,4 +106,4 @@ To be determined at public-flip time. Likely a permissive license for the archit
 
 ---
 
-*v1.1, S55 (2026-05-19). Private. Two-layer reframe added: execution layer (this repo) + strategic layer (PCLA, by-hand today). Flips public when proof lands.*
+*v1.2, S58 (2026-05-25). Factory-frame correction: product is the factory; B-tracks are primitives; build one concrete instance first, generalize after. Private. Flips public when pattern-proof lands; factory public-flip is a distinct later decision.*

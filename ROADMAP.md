@@ -1,35 +1,69 @@
 # Roadmap
 
-> **Thin by design.** Sequence and gates only. Decisions live in `NEXT-3-DECISIONS.md`. Track shapes live in `B-PROPOSAL.md` + per-agent `agents/<agent>/`. This file restates nothing; it sequences. v0.1, S58 (2026-05-25).
+> **Thin by design.** Sequence and gates only. Decisions live in `NEXT-3-DECISIONS.md`. Track shapes live in `B-PROPOSAL.md` + per-agent `agents/<agent>/`. This file restates nothing; it sequences. v0.2, S58 (2026-05-25) — factory-frame correction.
+
+## What we're actually building
+
+A **verifiable business factory**: a system that, given a business spec, instantiates an automated business that runs without operator supervision and is auditable end-to-end. The product is the factory. Each factory output is a separate automated business instance, each itself verifiable (MODE-contract, falsifiers, audit logs, killswitch). The factory itself is mechanism-verifiable (did it deploy? are the audit logs balanced?); the business-success of each output stays dark-zone (the market verifies it, over time — that part stays with the operator forever, by design).
+
+**What the B-tracks are.** B-1..B-8 are **business primitives** — the reusable capabilities any one instance composes (talk to customers, ship a landing page, run ads, deploy code, etc.). Shipping all 8 at autonomy gives you **one** automated business, not a factory. The factory layer (orchestration, business-spec schema, instance isolation, multi-tenant operator-attention router) is the layer **above** B-PROPOSAL that does not yet exist in this repo.
+
+**Method: verifier-engineering, not factory-first.** "Create a business" is dark-zone (no built-in verifier, no terminal state). Building the factory abstraction before there is one working instance leaves the AI to wander through the unspecified middle. The path that does not drift is: do ONE concrete business end-to-end first, with checkable milestones at each step (each milestone IS the verifier the open-ended task is missing), THEN generalize the working instance into the factory. V-A's own go-to-market is that first instance.
+
+## First-instance checkable milestones (the gradient)
+
+Concrete, terminal, checkable. Each is the "done" the open-ended task lacks. Each unblocks the next.
+
+| # | Milestone | Verifier (when is it "done") |
+|---|---|---|
+| M1 | Market identified | One ICP doc with ≥5 verbatim pain phrases sourced from real prospect material (not invented). **`agents/b1-customer-interviewer/icp.md` is the artifact.** State: shipped. |
+| M2 | Offer defined | One paragraph + one price + one promise the offer is falsifiable against. **Artifact: a one-page offer doc in repo.** State: not started. |
+| M3 | Landing page live | One URL hosting the offer; can be reached from the public internet; has a working signup/contact path. State: not started. |
+| M4 | First contact made | First real prospect reached via DM or email; in `interview-log.jsonl` as `marked_sent`. State: shipped (n=1, prospect-0003). |
+| M5 | First reply | One non-bot reply from a real prospect. State: not yet (0 replies). |
+| M6 | First payment | One actual customer paying for the offer. State: not yet. |
+
+Drift-detector: any work that does not advance one of M1–M6 (or one of the four hard prereqs below, or the factory-layer naming) is substrate polish. Forcing function lives on the operator side; if you (Claude) propose work that lands outside this list, the operator's job is to refuse the substitute.
 
 ## Where we are right now
 
 - **Kernel built:** MODE-contract (per-agent `MODE` + append-only `flip-history.jsonl` + read-discipline + flip gates), repo-level `./killswitch`, `ROLLBACK.md` contract.
-- **Tracks at `auto`:** 0 / 2 needed for v1.0.
-- **Agents wired:** 1 (B-1 customer-interviewer at v0.2; sweep 2026-05-25 surfaced 3 falsifier spec bugs + 1 timestamp anomaly → v0.3 amendment drafted, awaiting cross-op review).
-- **Real campaign data:** 1 marked-sent (prospect-0003 Max, 2026-05-19). 0 replies. n far below any falsifier threshold.
+- **B-pattern primitives at `auto`:** 0 / 2 needed for the README's pattern-proof milestone.
+- **Primitives wired:** 1 (B-1 customer-interviewer at v0.2; v0.3 amendment DRAFT 2026-05-25 awaiting cross-op review).
+- **First-instance milestones cleared:** M1 (ICP), M4 partial (n=1 sent). M2, M3, M5, M6 not started.
+- **Factory layer:** does not exist. No business-spec schema, no orchestration, no instance isolation.
+- **Real campaign data:** 1 marked-sent (prospect-0003 Max, 2026-05-19). 0 replies.
 - **Posture:** private + invited early-access (≤5 testers).
 
-## The trigger that ends v0 (from `README.md`)
+## Versioning, factory-honest
 
-v1.0 = **≥2 tracks step→auto with cross-operator review + clean audit logs.** Public-flip then becomes operator-judgment per `NEXT-3-DECISIONS.md` Decision 3.
+The earlier "v1.0 = ≥2 tracks step→auto" was implicit B-pattern proof — the discipline holds for individual primitives. It is **not** factory-v1.0. Re-stated:
+
+| Layer | Milestone | Meaning |
+|---|---|---|
+| **B-pattern proof** | ≥2 B-tracks step→auto with cross-op review + clean audit logs | The discipline holds for individual primitives. (Inherited from README.) |
+| **First instance** | M1–M6 all "done"; V-A's own business has paying customers and runs on the primitives | One whole automated business exists, end-to-end. Dogfood case. |
+| **Factory v0.1** | Business-spec schema defined; factory can instantiate primitives against a spec; produces a second business instance (not V-A itself) | The factory exists as a thing, however rough. Two instances ≠ a product, but ≠ one-off either. |
+| **Factory v1.0** | N≥3 instances produced from spec; each at falsifier-clean autonomy on mechanism; cross-op review of the factory's instantiation discipline (not just per-instance) | The factory is what's shipping, not a particular business. |
+
+Public-flip is per-layer operator-judgment (`NEXT-3-DECISIONS.md` Decision 3). Pattern-proof public-flip and factory public-flip are distinct decisions.
 
 ## Prereq ladder (from `B-PROPOSAL.md` § Hard prereqs)
 
-The B-track set (the actual automated-business-builder) is gated on four prereqs. Lift order is operator's call; cheapest-first listed:
+These gate factory-v0.1, not the first instance. The first instance can proceed against M1–M6 without them; the factory cannot.
 
 | # | Prereq | Where it lives | Cost shape |
 |---|---|---|---|
 | 1 | ≥2 PCLA tracks demo-stable | PCLA repo (`modes.yaml`) | Currently 1 (A-3) + 1 retroactive-provisional (A-6); cheapest lift = discharge A-6 cross-op review by 2026-05-31 deadline |
 | 2 | Eve / Mark / external availability | Operator outreach | Days |
-| 3 | A-1 phase-transition-auto lands | PCLA (`tracks/06-phase-transition-auto/`) | Engineering weeks; provides Surface-Compliance substrate every B-track depends on |
-| 4 | Hosted-infra eng project funded | External (money + months) | Polsia's actual moat; bigger than all 8 B-tracks combined |
+| 3 | A-1 phase-transition-auto lands | PCLA (`tracks/06-phase-transition-auto/`) | Engineering weeks; provides Surface-Compliance substrate every primitive depends on |
+| 4 | Hosted-infra eng project funded | External (money + months) | The factory's actual substrate: the layer the factory deploys each instance onto. Bigger than all 8 primitives combined. |
 
-**Note on prereq-vs-substance.** Discharging #1 (A-6 graduation) is a checkbox lift that doesn't move V-A behavior. #3 (A-1) is the only PCLA-side prereq that's substantively load-bearing for B-tracks. Track checkbox lifts in PCLA, not here.
+**Substrate-vs-checkbox honesty.** Prereq #1 is checkbox; #2 is logistics; #3 is engineering-weeks; #4 is months + money and is **load-bearing for the factory specifically** (you cannot deploy N instances without hosted infra). Prereqs #3 and #4 are the real cost of the factory; #1 and #2 unblock review queue capacity, not product.
 
-## Track ladder (from `B-PROPOSAL.md` § Phasing — DO NOT begin without re-reading hard prereqs)
+## Track ladder (primitives for the first instance — from `B-PROPOSAL.md` § Phasing)
 
-The 8 B-tracks group by gate cost. Each phase is authorized only after prior phase demonstrates the falsifier-per-track pattern catches what it's supposed to catch.
+The 8 B-tracks group by gate cost. Each phase is authorized only after the prior demonstrates the falsifier-per-track pattern catches what it's supposed to catch. **All 8 are primitives for one instance**; the factory layer is separate.
 
 | Phase | Tracks | Why these together |
 |---|---|---|
@@ -38,7 +72,7 @@ The 8 B-tracks group by gate cost. Each phase is authorized only after prior pha
 | **B-γ** (outputs that spend money) | B-3 cold-outreach, B-4 ads-pilot, B-5 code-deploy | Real-world consequences if falsifiers fail |
 | **B-δ** (inbound high-stakes) | B-6 inbox-triage | Worst-case = hallucinated VC term-sheet signed in agent's voice |
 
-**Current track state:**
+**Current primitive state:**
 
 | Track | State | Notes |
 |---|---|---|
@@ -48,13 +82,13 @@ The 8 B-tracks group by gate cost. Each phase is authorized only after prior pha
 
 ## Suggested sequencing (operator's call; not authorization)
 
-The lift sequence isn't fixed; it depends on which gates are cheapest to lift in any given week. Plausible orderings:
+Three coherent orderings, each grounded in a different binding constraint:
 
-1. **Substance-first:** B-1 campaign run to falsifier-evaluable n (≥10 sends; needs operator outreach cadence) → real evidence the discipline catches Surface-Compliance → second track (B-8 or B-2-when-gated) → v1.0 trigger met.
-2. **Checkbox-first:** PCLA prereq #1 discharged via A-6 cross-op review → PCLA flipped-track count 1→2 → one B-PROPOSAL hard prereq ticked → A-1 work begins → eventual B-track unlock.
-3. **External-leverage-first:** Prereq #2 (commission Eve/Mark) → cross-op queue capacity for whichever artifact comes next.
+1. **First-instance-first:** Advance M1–M6 with the primitives that exist (B-1 for outreach; B-2 for landing page when prereqs lift). Real prospect cadence → real replies → real customers. The dark-zone residue gets verified by the market, not by us. Substance moves; factory layer can wait.
+2. **Pattern-proof-first:** B-pattern proof milestone (≥2 primitives at auto, cross-op review clean). Discharge A-6 review (PCLA prereq #1). Generates artifacts but does not move M1–M6.
+3. **Factory-substrate-first:** Begin hosted-infra scoping (prereq #4) and A-1 work (prereq #3). Largest cost, longest horizon, only path to factory-v0.1.
 
-Tradeoff: substance-first generates real evidence but stalls on operator outreach cadence; checkbox-first moves the count without moving the product; external-leverage-first amplifies whichever path is chosen next.
+Tradeoff: #1 produces real evidence but stalls on operator outreach cadence; #2 moves the checkbox count without moving the product; #3 unblocks factory but takes months. **The forcing function refuses any fourth option** (= substrate polish dressed as progress).
 
 ## What this roadmap is NOT
 
@@ -62,28 +96,30 @@ Tradeoff: substance-first generates real evidence but stalls on operator outreac
 - **Not authorization.** Track promotions (sketch → SPEC, SPEC → impl, step → auto) require their own gates per `B-PROPOSAL.md`, `MODE-CONTRACT.md`, and `README.md`.
 - **Not a decision list.** Decisions live in `NEXT-3-DECISIONS.md`; this file follows them.
 - **Not substrate.** Track shapes live in `B-PROPOSAL.md` + per-agent dirs; this file points, doesn't restate.
+- **Not the factory spec.** The factory's actual SPEC does not exist yet. Naming it as the destination is not the same as designing it. The next-up factory work is M1–M6 (build one instance first), not a factory-design doc.
 
 ## Falsifier (for this document)
 
-This file is **doing its job** if a new session can read it once and pick up the work without re-reading every adjacent doc.
+This file is **doing its job** if a new session can read it once and pick up the work without re-reading every adjacent doc — AND if the named work in any given session is one of: a hard prereq, an M1–M6 milestone, or naming/speccing the factory layer.
 
 This file has **failed** if:
-- It accumulates phases beyond B-α / β / γ / δ (we have a 5th phase = scope creep, not roadmap completion).
+- It accumulates phases beyond B-α / β / γ / δ (5th phase = scope creep, not roadmap completion).
 - It survives more than 3 sessions without any state field updating (current-state block goes stale → fictional roadmap).
 - Track-shape detail starts leaking back into this file (we're rebuilding `B-PROPOSAL.md` here = duplication; delete this file before that happens).
-- It tries to predict when a prereq will lift (timing prediction is Gantt-thinking; we don't do that).
+- It tries to predict when a prereq will lift (timing prediction is Gantt-thinking).
+- **A session lands a commit that doesn't advance a hard prereq, an M1–M6 milestone, or factory-layer naming** (= right-repo-wrong-work drift, the failure mode this version of the roadmap was written to catch).
 
 ## Cross-references
 
-- v1.0 trigger: `README.md`
-- Hard prereqs + B-track shapes + phasing: `B-PROPOSAL.md`
+- v1.0 framings (pattern-proof + factory): `README.md`
+- Hard prereqs + primitive shapes + phasing: `B-PROPOSAL.md`
 - Active decisions: `NEXT-3-DECISIONS.md`
 - Mode-toggle kernel: `MODE-CONTRACT.md`
 - Rollback contract: `ROLLBACK.md`
 - B-1 agent: `agents/b1-customer-interviewer/README.md`
 - B-2 staged: `B-2-DESIGN-SKETCH.md`
-- PCLA strategic-layer side: `../prometheus-crystal-lab-auto/ROADMAP.md` (the discipline this layer is catching up to)
+- PCLA strategic-layer side: `../prometheus-crystal-lab-auto/ROADMAP.md`
 
 ---
 
-*Roadmap v0.1, S58 (2026-05-25). Thin by design. Delete if it fails the falsifier above.*
+*Roadmap v0.2, S58 (2026-05-25). Factory-frame correction. Thin by design. Delete if it fails the falsifier above.*
