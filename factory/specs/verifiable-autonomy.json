@@ -1,0 +1,13 @@
+{
+  "name": "verifiable-autonomy",
+  "agents": [
+    "b1-customer-interviewer"
+  ],
+  "icp_source": "agents/b1-customer-interviewer/icp.md",
+  "mode": "step",
+  "offer": {
+    "paragraph": "verifiable-autonomy is a Claude-Code-hosted multi-agent system where every agent ships with verifiability built in: Surface-Compliance discipline (verbatim citation required, refusal on thin substrate), pre-registered falsifiers you grep against the audit log, append-only JSONL of every action with cited sources, operator-supervised by default. Runs in your Claude Code on your machine with your API key.",
+    "price": "TBD (M2 milestone — operator decision)",
+    "promise": "TBD (M2 milestone — operator decision; the promise must be falsifiable against the audit log)"
+  }
+}

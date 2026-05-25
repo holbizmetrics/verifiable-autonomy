@@ -17,3 +17,4 @@ agents/b1-customer-interviewer/replies/
 __pycache__/
 .venv/
 node_modules/
+businesses/
