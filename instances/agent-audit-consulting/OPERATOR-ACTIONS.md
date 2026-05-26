@@ -2,7 +2,7 @@
 
 The builder writes templates + a render script. These steps require your accounts/keys and must be done by you. Per `factory/SPEC.md` § Working protocol step 3.
 
-Templates use `{{OPERATOR_EMAIL}}` and `{{STRIPE_CHECKOUT_URL}}` placeholders. The render script (`render.py`) substitutes from env vars (preferred) or `.local/config.env` (gitignored). **Real values never enter git.**
+Templates use `{{OPERATOR_EMAIL}}` (and `{{STRIPE_CHECKOUT_URL}}`, currently unused since the landing CTA pivoted to email-intake — kept in render for when Stripe is wired back). The render script (`render.py`) substitutes from env vars (preferred) or `.local/config.env` (gitignored). **Real values never enter git.**
 
 ## 1. Configure operator values (local)
 
@@ -12,12 +12,18 @@ Templates use `{{OPERATOR_EMAIL}}` and `{{STRIPE_CHECKOUT_URL}}` placeholders. T
 - Render: `python3 render.py` → output in `.local/dist/`
 - Missing keys leave placeholders untouched (warning printed) — you can render + deploy with email only and add Stripe later
 
-## 2. Stripe Checkout link (deferred per current operator decision)
+## 2. Stripe Checkout link (DEFERRED — landing now uses email-intake)
 
-- Log into Stripe dashboard
-- Products → New product → `AI-Agent Audit`, $2,500 USD, one-time
+Current Level-0 path is intake-by-email; payment is invoiced manually (bank transfer or invoice-link) after the buyer requests an audit. Re-enable this section when:
+
+- Stripe CLI DNS blocker on Termux is resolved (or operator creates the link via dashboard on a desktop browser), AND
+- audits 1-3 have produced enough volume that manual invoicing becomes friction.
+
+When re-enabled:
+- Stripe dashboard → Products → New product → `AI-Agent Audit`, $2,500 USD, one-time
 - Payment link → enable → copy the URL
-- Set `STRIPE_CHECKOUT_URL` in `.local/config.env` AND in the GitHub Actions secret (see step 3)
+- Set `STRIPE_CHECKOUT_URL` in `.local/config.env` AND in the GitHub Actions secret
+- Restore the landing CTA in `landing/index.html` to point at `{{STRIPE_CHECKOUT_URL}}`
 - Re-render: `python3 render.py`
 - Configure Stripe receipt-email reply-to → your `OPERATOR_EMAIL`
 
@@ -54,14 +60,13 @@ One-time operator setup:
 
 ## 4. Test-customer loop verify (done-condition)
 
-Requires step 2 done.
+Email-intake path (current Level-0 — step 2 not required).
 
 - Open the deployed landing page
-- Click the Buy button → Stripe Checkout opens
-- Use Stripe test mode (test card `4242 4242 4242 4242`), OR do a real $2,500 charge to your own card + refund
-- Receipt arrives in your inbox
-- Reply with the intake fields per `.local/dist/intake.md`
-- Confirm the reply arrives
+- Click "Request an audit" → your mail client opens a draft to `OPERATOR_EMAIL` with subject prefilled
+- Send the request from a second email address (test customer)
+- From the operator address: receive the request → reply with the intake template (`.local/dist/intake.md`) + a manual invoice (bank transfer / invoice-link / Wise / whatever)
+- From the test-customer address: receive the intake email → confirm the round-trip works
 
 When all of above succeed end-to-end → **Level-0 done.** Update `README.md` Status table.
 

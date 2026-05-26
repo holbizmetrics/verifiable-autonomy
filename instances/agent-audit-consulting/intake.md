@@ -1,6 +1,6 @@
 # Intake — AI-Agent Audit
 
-After payment, reply to your Stripe receipt email with the following.
+Reply to my intake-confirmation email with the following. Audit work starts when payment (invoiced separately) clears.
 
 ## 1. Prompts
 - A link to your prompt files (GitHub repo, Drive folder), OR

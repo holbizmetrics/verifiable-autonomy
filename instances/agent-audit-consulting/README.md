@@ -11,7 +11,7 @@ First base-case instance of an automated business built per `factory/SPEC.md`. H
 | 3 | Render script (`render.py`) + configurable pattern | written; env vars or `.local/config.env` → `.local/dist/` | done |
 | 4 | Operator email | set locally in `.local/config.env` (gitignored, real value never enters git) | done locally; needs GH secret for deploy |
 | 5 | Report template | deferred until after audit #1 | — |
-| 6 | Stripe Checkout link | not created (operator skipped per current decision) | operator |
+| 6 | Stripe Checkout link | DEFERRED — landing CTA pivoted to email-intake; manual invoicing for audits 1-3 | — |
 | 7 | GH Pages deploy workflow (`.github/workflows/pages.yml`) | written; auto-renders + deploys on push | done |
 | 8 | Repo Pages enabled + GH secrets configured | NO | operator |
 | 9 | Test-customer loop verified | NO | operator |

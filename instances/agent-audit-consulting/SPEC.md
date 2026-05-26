@@ -9,7 +9,7 @@ Locked 2026-05-26 per session dialog. Per `factory/SPEC.md` § Input "minimum vi
 | What's sold | Written audit of an AI-agent setup — review of prompts + tool wiring + audit logs; report names hallucination/drift/misuse risks; pre-registers failure-modes-to-grep |
 | To whom | Berlin Early AI-dopters (2026-06-17 attendees) with ≥1 agent in some running state (prototype or prod) |
 | How delivered | Async written report only (no call), PDF or markdown, 5 business days from intake received |
-| How captured | Stripe Checkout, pay-first, $2,500 USD flat; full refund if zero auditable risks found |
+| How captured | Email intake → manual invoice (bank transfer or invoice link) → audit starts on payment confirmation. $2,500 USD flat; full refund if zero auditable risks found |
 
 ## Why these starters
 
@@ -18,7 +18,7 @@ All four were "operator doesn't know yet" defaults at spec-lock time. Picked sma
 - **ICP starter:** Berlin 2026-06-17 talk = scheduled forcing function, reachable audience, gives post-talk ICP signal in ~3 weeks.
 - **Scope starter:** 4 operator-hours/audit caps the deliverable + lets the $2,500 price be honestly defended (~$625/hr).
 - **Delivery starter:** async-only = lowest friction; add calls only if buyers ask.
-- **Payment starter:** pay-first removes invoicing/collection friction; refund-promise carries the trust.
+- **Payment starter:** intake-by-email + manual invoice. Stripe Checkout deferred (CLI/DNS blocker on Termux + manual invoicing is acceptable for audits 1-3). Refund-promise carries the trust regardless of capture mechanism.
 
 ## Deferred (named, not done)
 
