@@ -18,3 +18,7 @@ __pycache__/
 .venv/
 node_modules/
 businesses/
+
+# Per-instance operator config + rendered output — never commit
+# (real email addresses, Stripe links, etc. go here)
+**/.local/
