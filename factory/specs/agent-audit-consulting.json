@@ -10,8 +10,60 @@
   "payment_timing": "pay-first-via-stripe-checkout",
   "offer": {
     "paragraph": "Done-for-you audit of your AI-agent setup. We review your prompts, your tool wiring, and your audit logs; produce a written report naming every place an agent could hallucinate without you catching it; pre-register the failure modes you should be grepping for.",
-    "price": "$2,500 flat for a one-time audit",
+    "price": "$2,500 flat — one-time audit.",
     "promise": "If we find zero auditable risks in your current setup, the audit is free."
+  },
+  "loop": {
+    "type": "email-intake",
+    "title": "AI-Agent Audit",
+    "headline": "Done-for-you audit of your AI-agent setup.",
+    "pitch": "We review your prompts, your tool wiring, and your audit logs; produce a written report naming every place an agent could hallucinate without you catching it; pre-register the failure modes you should be grepping for.",
+    "cta_label": "Request an audit",
+    "cta_subject": "AI-Agent Audit — Request",
+    "turnaround": "5 business days from intake received.",
+    "footer": "Delivered async (written report only, no call).",
+    "what_you_send": [
+      "Your prompts (files or a repo URL)",
+      "Your tool wiring (which tools the agent calls, how they're configured)",
+      "A recent slice of audit / conversation logs (24-48 hours is enough)",
+      "One sentence on what your agent is supposed to do"
+    ],
+    "what_you_get": [
+      "A written report (PDF or markdown) listing every place we found risk of unflagged hallucination, drift, or tool-misuse",
+      "A list of pre-registered failure modes — specific patterns to grep your future logs for",
+      "Turnaround: 5 business days from intake received"
+    ],
+    "intake_fields": [
+      {
+        "heading": "Prompts",
+        "items": [
+          "A link to your prompt files (GitHub repo, Drive folder), OR",
+          "Pasted prompts in the email body"
+        ]
+      },
+      {
+        "heading": "Tool wiring",
+        "items": [
+          "Which tools the agent calls (list them by name)",
+          "For each tool: brief description of input/output + any guardrails",
+          "Link to the MCP server / tool definitions if applicable"
+        ]
+      },
+      {
+        "heading": "Recent logs",
+        "items": [
+          "24-48 hours of conversation / audit logs (most recent), as a file attachment",
+          "Format: JSONL, plain text, or whatever your system emits"
+        ]
+      },
+      {
+        "heading": "Goal",
+        "items": [
+          "One sentence: what is your agent supposed to do?",
+          "Who is your agent's user?"
+        ]
+      }
+    ]
   },
   "_instance_dir": "instances/agent-audit-consulting/",
   "_spec_locked": "2026-05-26"

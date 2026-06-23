@@ -1,0 +1,52 @@
+# GitHub Pages deploy workflow for a factory-built business.
+#
+# This is a TEMPLATE (.tmpl). To use it, move this business directory into its
+# own git repo, then copy this file to .github/workflows/pages.yml in that repo.
+# It renders the storefront with your operator secrets and publishes the landing.
+#
+# Operator one-time setup in the business's own repo:
+#   - Settings -> Pages -> Source = "GitHub Actions"
+#   - Settings -> Secrets and variables -> Actions -> add OPERATOR_EMAIL
+#     (and STRIPE_CHECKOUT_URL when you have it)
+
+name: Deploy landing page to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'storefront/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: Render storefront with operator config
+        env:
+          OPERATOR_EMAIL: ${{ secrets.OPERATOR_EMAIL }}
+          STRIPE_CHECKOUT_URL: ${{ secrets.STRIPE_CHECKOUT_URL }}
+        run: python3 storefront/render.py
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: storefront/.local/dist/landing
+      - id: deployment
+        uses: actions/deploy-pages@v4

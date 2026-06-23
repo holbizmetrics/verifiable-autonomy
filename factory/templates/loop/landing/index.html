@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>{{SPEC:HEADLINE}}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  body { max-width: 640px; margin: 4rem auto; padding: 0 1.5rem; font: 1rem/1.6 system-ui, -apple-system, sans-serif; color: #222; }
+  h1 { font-size: 1.6rem; line-height: 1.3; margin-bottom: 1.5rem; }
+  h2 { font-size: 1.1rem; margin-top: 2rem; }
+  .price { font-size: 1.3rem; font-weight: 600; margin: 2rem 0 0.5rem; }
+  .promise { font-style: italic; color: #555; margin-bottom: 2rem; }
+  .buy { display: inline-block; background: #111; color: #fff; padding: 0.9rem 1.8rem; text-decoration: none; border-radius: 4px; font-weight: 600; }
+  .buy:hover { background: #333; }
+  hr { border: 0; border-top: 1px solid #eee; margin: 3rem 0; }
+  ul { padding-left: 1.4rem; }
+  small { color: #888; }
+</style>
+</head>
+<body>
+
+<h1>{{SPEC:HEADLINE}}</h1>
+
+<p>{{SPEC:PITCH}}</p>
+
+<p class="price">{{SPEC:PRICE}}</p>
+
+<p class="promise">{{SPEC:PROMISE}}</p>
+
+<a class="buy" href="mailto:{{OPERATOR_EMAIL}}?subject={{SPEC:CTA_SUBJECT}}">{{SPEC:CTA_LABEL}} &rarr;</a>
+
+<p><small>I'll reply with the intake form and an invoice. Work starts when payment is confirmed.</small></p>
+
+<hr>
+
+<h2>What you'll send in the intake</h2>
+<ul>
+{{SPEC:WHAT_YOU_SEND_HTML}}
+</ul>
+
+<h2>What you get back</h2>
+<ul>
+{{SPEC:WHAT_YOU_GET_HTML}}
+</ul>
+
+<h2>Turnaround</h2>
+<p>{{SPEC:TURNAROUND}}</p>
+
+<hr>
+
+<p><small>{{SPEC:FOOTER}} Substrate: <a href="{{SPEC:REPO_URL}}">verifiable-autonomy</a> (open-source).</small></p>
+
+</body>
+</html>
