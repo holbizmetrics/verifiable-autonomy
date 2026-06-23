@@ -1,10 +1,10 @@
 # Roadmap
 
-> **Thin by design.** Sequence and gates only. Decisions live in `NEXT-3-DECISIONS.md`. Track shapes live in `B-PROPOSAL.md` + per-agent `agents/<agent>/`. This file restates nothing; it sequences. v0.2, S58 (2026-05-25) — factory-frame correction.
+> **Thin by design.** Sequence and gates only. Decisions live in `NEXT-3-DECISIONS.md`. Track shapes live in `B-PROPOSAL.md` + per-agent `agents/<agent>/`. This file restates nothing; it sequences. v0.3, 2026-06-23 — factory-v0.1-shipped state-sync. (v0.2, S58 2026-05-25 — factory-frame correction.)
 
 ## What we're actually building
 
-A **verifiable business factory**: a system that, given a business spec, instantiates an automated business that runs without operator supervision and is auditable end-to-end. The product is the factory. Each factory output is a separate automated business instance, each itself verifiable (MODE-contract, falsifiers, audit logs, killswitch). The factory itself is mechanism-verifiable (did it deploy? are the audit logs balanced?); the business-success of each output stays dark-zone (the market verifies it, over time — that part stays with the operator forever, by design).
+A **verifiable business factory**: a system that, given a business spec, instantiates a deployable, auditable automated business. ("Automated" is **build-time** today — the factory builds the instance; the instance is operator-run. Run-time autonomy is a deferred layer; see `factory/SPEC.md`.) The product is the factory. Each factory output is a separate automated business instance, each itself verifiable (MODE-contract, falsifiers, audit logs, killswitch). The factory itself is mechanism-verifiable (did it deploy? are the audit logs balanced?); the business-success of each output stays dark-zone (the market verifies it, over time — that part stays with the operator forever, by design).
 
 **What the B-tracks are.** B-1..B-8 are **business primitives** — the reusable capabilities any one instance composes (talk to customers, ship a landing page, run ads, deploy code, etc.). Shipping all 8 at autonomy gives you **one** automated business, not a factory. The factory layer (orchestration, business-spec schema, instance isolation, multi-tenant operator-attention router) is the layer **above** B-PROPOSAL that does not yet exist in this repo.
 
@@ -31,9 +31,9 @@ Drift-detector: any work that does not advance one of M1–M6 (or one of the fou
 - **B-pattern primitives at `auto`:** 0 / 2 needed for the README's pattern-proof milestone.
 - **Primitives wired:** 1 (B-1 customer-interviewer at v0.2; v0.3 amendment DRAFT 2026-05-25 awaiting cross-op review).
 - **First-instance milestones cleared:** M1 (ICP), M4 partial (n=1 sent). M2, M3, M5, M6 not started.
-- **Factory layer:** does not exist. No business-spec schema, no orchestration, no instance isolation.
+- **Factory layer:** **v0.1 SHIPPED 2026-06-23** (ahead of instance-first, by operator call). Business-spec schema (JSON) + `validate` + `build` + value→capture storefront emission live in `factory/factory.py`; per-business isolation under `businesses/` (gitignored). Still **scaffold-only**: no run-time autonomy, no auto-ideation (both deferred per SPEC). Why this is not the drift the roadmap guards against: the scaffold layer is verifier-clean + content-agnostic (the operator supplies all content via the spec), so building it early can't wander the content dark-zone — that caution applies to *what business to build*, not to *emit files from a spec*.
 - **Real campaign data:** 1 marked-sent (prospect-0003 Max, 2026-05-19). 0 replies.
-- **Posture:** private + invited early-access (≤5 testers).
+- **Posture:** **public** (2026-06-23); proof still owed — see README § Status. No B-track at `auto` yet (0/2).
 
 ## Versioning, factory-honest
 
@@ -43,7 +43,7 @@ The earlier "v1.0 = ≥2 tracks step→auto" was implicit B-pattern proof — th
 |---|---|---|
 | **B-pattern proof** | ≥2 B-tracks step→auto with cross-op review + clean audit logs | The discipline holds for individual primitives. (Inherited from README.) |
 | **First instance** | M1–M6 all "done"; V-A's own business has paying customers and runs on the primitives | One whole automated business exists, end-to-end. Dogfood case. |
-| **Factory v0.1** | Business-spec schema defined; factory can instantiate primitives against a spec; produces a second business instance (not V-A itself) | The factory exists as a thing, however rough. Two instances ≠ a product, but ≠ one-off either. |
+| **Factory v0.1** | Business-spec schema defined; factory can instantiate primitives against a spec; produces a second business instance (not V-A itself) | The factory exists as a thing, however rough. Two instances ≠ a product, but ≠ one-off either. **STATE 2026-06-23: schema + instantiate-against-spec + storefront emission DONE (`factory.py`); a second *structurally-distinct* instance NOT yet (n=1 base: agent-audit-consulting). The n=1→n=2 step is the real generalization test.** |
 | **Factory v1.0** | N≥3 instances produced from spec; each at falsifier-clean autonomy on mechanism; cross-op review of the factory's instantiation discipline (not just per-instance) | The factory is what's shipping, not a particular business. |
 
 Public-flip is per-layer operator-judgment (`NEXT-3-DECISIONS.md` Decision 3). Pattern-proof public-flip and factory public-flip are distinct decisions.
@@ -122,4 +122,4 @@ This file has **failed** if:
 
 ---
 
-*Roadmap v0.2, S58 (2026-05-25). Factory-frame correction. Thin by design. Delete if it fails the falsifier above.*
+*Roadmap v0.3, 2026-06-23. Factory-v0.1-shipped state-sync (state block + versioning row updated to ground truth; run-without-supervision overclaim softened to build-time). v0.2, S58 (2026-05-25): factory-frame correction. Thin by design. Delete if it fails the falsifier above.*

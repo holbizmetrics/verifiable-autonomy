@@ -4,17 +4,15 @@
 
 ## Status
 
-**Private with invited early-access (S55, 2026-05-18).** Flips fully public when at least two tracks have demonstrated step → auto operation with cross-operator review and clean audit logs.
+**Public; proof still owed (2026-06-23).** The repo is public — read it as a manifesto + the factory scaffold (v0.1), **not** as demonstrated autonomy. The original "private until ≥2 tracks demo step→auto" gate was self-imposed marketing discipline; the honest version of that discipline now lives in the open, as a caveat instead of a visibility wall:
 
-In the interim, repo access is by invitation, capped at 5 early-access testers. Invited testers see the same code with full audit-log access. The public read stays gated on proof; early-access exists to surface real-world friction that synthetic testing misses. Each invited tester is a falsifier-probe against the architecture's claims.
-
-Early-access posture is reversible. Cap can be lowered, raised, or revoked at any time; no public footprint accrues. Invitation message includes a one-line don't-post-publicly clause until the proof-gate clears.
+**No claim in this repo is proven until its track has demonstrated step→auto with cross-operator review and clean audit logs.** Today that bar is not met — 0 / 2 B-tracks are at `auto`. What's real and verified is the *scaffold* (the factory builds, validates, and refuses invalid specs); the autonomy claims are design intent, not a track record. Treat them accordingly.
 
 ## What this is
 
-A **verifiable business factory**: a system that, given a business spec, instantiates an automated business that runs without operator supervision and is auditable end-to-end. The product is the factory; each output is a separate automated business instance. The factory itself is mechanism-verifiable (did it deploy? are the audit logs balanced?); the business-success of each output stays dark-zone (the market verifies it, over time — that part stays with the operator, by design).
+A **verifiable business factory**: a system that, given a business spec, instantiates a deployable, auditable automated business. ("Automated" is **build-time** today — the factory builds the instance; the instance is operator-run. Run-time autonomy is a deferred layer; see `factory/SPEC.md`.) The product is the factory; each output is a separate automated business instance. The factory itself is mechanism-verifiable (did it deploy? are the audit logs balanced?); the business-success of each output stays dark-zone (the market verifies it, over time — that part stays with the operator, by design).
 
-The factory does not exist yet. V-A is currently building the **first instance** (V-A's own go-to-market) as the dogfood case the factory will generalize from. The B-tracks (`B-PROPOSAL.md`, B-1..B-8) are the **primitives** any one instance composes — they are not the factory. See `ROADMAP.md` for the M1–M6 first-instance milestones and the factory-vs-pattern-proof versioning.
+The factory now exists at **v0.1** (scaffold: a spec → a validated, deployable business with a value→capture storefront; `factory/factory.py`), generalized from one hand-built instance (agent-audit-consulting, n=1). The first instance's own go-to-market (M2–M6) is still open and remains the dogfood case the factory keeps generalizing from. The B-tracks (`B-PROPOSAL.md`, B-1..B-8) are the **primitives** any one instance composes — they are not the factory. See `ROADMAP.md` for the M1–M6 first-instance milestones and the factory-vs-pattern-proof versioning.
 
 ## The thesis
 
@@ -81,11 +79,11 @@ The architecture runs at two scales today. **Execution layer (this repo):** B-1 
 
 **First-instance state (M1–M6, `ROADMAP.md`):** M1 (ICP identified) and M4 (first contact) shipped. M2 (offer), M3 (landing page), M5 (first reply), M6 (first payment) not started. The dark-zone residue at M5/M6 is operator + market work, not Claude work.
 
-**Factory layer:** does not exist. No business-spec schema, no orchestration, no instance isolation. Naming it as the destination is not the same as designing it. The next-up factory work is M1–M6 on the dogfood instance, not a factory-design doc.
+**Factory layer:** **v0.1 shipped (2026-06-23)** — business-spec schema (JSON) + `validate` + `build` + value→capture storefront emission (`factory/factory.py`), generalized from one hand-built instance (n=1). Still scaffold-only: no run-time autonomy, no auto-ideation (deferred per `factory/SPEC.md`). The honest next test is a second, structurally-distinct instance from spec (n=1→n=2), alongside M2–M6 on the dogfood instance.
 
-This repo flips from private to public at pattern-proof v1.0 (≥2 primitives at auto, cross-op review clean). Factory public-flip is a distinct, later decision per `NEXT-3-DECISIONS.md`.
+This repo is already public; the proof it points to is still owed (pattern-proof v1.0 = ≥2 primitives at auto, cross-op review clean — not yet met). The factory's own public-flip framing is a distinct, later decision per `NEXT-3-DECISIONS.md`.
 
-Until then: this README is the manifesto. Early-access testers are the first real-world probe. The public proof is owed.
+Until then: this README is the manifesto, in public. The proof is owed.
 
 ## License
 
@@ -106,4 +104,4 @@ To be determined at public-flip time. Likely a permissive license for the archit
 
 ---
 
-*v1.2, S58 (2026-05-25). Factory-frame correction: product is the factory; B-tracks are primitives; build one concrete instance first, generalize after. Private. Flips public when pattern-proof lands; factory public-flip is a distinct later decision.*
+*v1.3, 2026-06-23. Posture synced to ground truth (repo is public; proof still owed) + factory-v0.1-shipped. v1.2, S58 (2026-05-25): factory-frame correction (product is the factory; B-tracks are primitives; build one concrete instance first, generalize after).*
