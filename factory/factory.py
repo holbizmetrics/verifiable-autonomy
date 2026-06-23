@@ -50,6 +50,11 @@ LOOP_SKIP_NAMES = {"render.py", "config.env.example", "deploy-pages.yml.tmpl"}
 PER_INSTANCE_SKIP = {
     "icp.md",
     "prospects.md",
+    # The *-template.md sources are read directly to derive icp.md/prospects.md
+    # below; copying them into the built dir too just leaves redundant templates
+    # next to the filled files.
+    "icp-template.md",
+    "prospects-template.md",
     "interview-log.jsonl",
     "drafts",
     "replies",
@@ -318,7 +323,11 @@ INTERVIEW_AXES = [
     ("how_value_delivered", "How is value delivered? (storefront / written report / flow)"),
     ("how_money_captured", "How is money captured? (payment mechanism + price)"),
 ]
-KNOWN_LOOP_TYPES = {"email-intake", "stripe-checkout"}
+# Loop types the factory can actually EMIT (one template = templates/loop/,
+# an email-intake landing). Keep this narrowed to what build() can produce:
+# accepting a type with no template silently ships the wrong storefront.
+# Adding "stripe-checkout" means adding its template + an emit branch first.
+KNOWN_LOOP_TYPES = {"email-intake"}
 TODO = "TODO"
 SLUG_OK = "abcdefghijklmnopqrstuvwxyz0123456789-"
 
@@ -372,6 +381,9 @@ def validate_spec(spec):
     if not agents or _is_todo(agents):
         errors.append("agents: at least one agent id required")
     else:
+        if len(agents) != len(set(agents)):
+            dupes = sorted({a for a in agents if agents.count(a) > 1})
+            errors.append(f"agents: duplicate id(s) {dupes} (each agent id must be unique)")
         for a in agents:
             if not (AGENTS_ROOT / a).exists():
                 errors.append(f"agents: template not found for '{a}' (agents/{a}/)")
