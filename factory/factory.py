@@ -306,11 +306,186 @@ def build(spec, output_root):
     return business_dir
 
 
+# ---------------------------------------------------------------------------
+# desire -> spec front-end: interview, scaffold, validate
+# ---------------------------------------------------------------------------
+
+# The minimum-viable business-spec (factory/SPEC.md § Input). The interview
+# fills these four axes; the factory never auto-ideates them (deferred).
+INTERVIEW_AXES = [
+    ("what_is_sold", "What is sold? (the product/offer, in one phrase)"),
+    ("to_whom", "To whom? (the ICP -- who specifically buys this)"),
+    ("how_value_delivered", "How is value delivered? (storefront / written report / flow)"),
+    ("how_money_captured", "How is money captured? (payment mechanism + price)"),
+]
+KNOWN_LOOP_TYPES = {"email-intake", "stripe-checkout"}
+TODO = "TODO"
+SLUG_OK = "abcdefghijklmnopqrstuvwxyz0123456789-"
+
+
+def _is_todo(v):
+    """True if a value is unfilled (empty, the TODO marker, or all-TODO)."""
+    if isinstance(v, str):
+        return v.strip() == "" or v.strip() == TODO
+    if isinstance(v, list):
+        return len(v) == 0 or all(_is_todo(x) for x in v)
+    if isinstance(v, dict):
+        return len(v) == 0 or all(_is_todo(x) for x in v.values())
+    return v is None
+
+
+def scaffold_spec_template(slug, desire=None):
+    return {
+        "name": slug,
+        "_desire": desire or TODO,
+        "agents": ["b1-customer-interviewer"],
+        "mode": "step",
+        "axes": {axis: TODO for axis, _ in INTERVIEW_AXES},
+        "offer": {"paragraph": TODO, "price": TODO, "promise": TODO},
+        "loop": {
+            "type": "email-intake",
+            "title": TODO,
+            "headline": TODO,
+            "pitch": TODO,
+            "cta_label": "Request",
+            "cta_subject": f"{TODO} - Request",
+            "turnaround": TODO,
+            "footer": "Delivered async.",
+            "what_you_send": [TODO],
+            "what_you_get": [TODO],
+            "intake_fields": [{"heading": TODO, "items": [TODO]}],
+        },
+    }
+
+
+def validate_spec(spec):
+    """Return (errors, warnings). Errors block a build; warnings don't."""
+    errors, warnings = [], []
+
+    name = spec.get("name", "")
+    if not name or _is_todo(name):
+        errors.append("name: missing or unfilled")
+    elif any(c not in SLUG_OK for c in name) or name[0] == "-":
+        errors.append(f"name: '{name}' is not a clean slug (use [a-z0-9-], no leading '-')")
+
+    agents = spec.get("agents", [])
+    if not agents or _is_todo(agents):
+        errors.append("agents: at least one agent id required")
+    else:
+        for a in agents:
+            if not (AGENTS_ROOT / a).exists():
+                errors.append(f"agents: template not found for '{a}' (agents/{a}/)")
+
+    mode = spec.get("mode")
+    if mode is not None and mode not in {"step", "auto"}:
+        errors.append(f"mode: '{mode}' invalid (must be step or auto)")
+
+    axes = spec.get("axes")
+    if not axes:
+        warnings.append("axes: no minimum-viable-spec block (run `factory.py new` to interview)")
+    else:
+        for axis, _q in INTERVIEW_AXES:
+            if _is_todo(axes.get(axis)):
+                warnings.append(f"axes.{axis}: unfilled")
+
+    loop = spec.get("loop")
+    offer = spec.get("offer", {})
+    if loop:
+        if loop.get("type") not in KNOWN_LOOP_TYPES:
+            errors.append(f"loop.type: '{loop.get('type')}' unknown (known: {sorted(KNOWN_LOOP_TYPES)})")
+        if _is_todo(loop.get("headline")) and _is_todo(loop.get("title")):
+            errors.append("loop: needs a headline or title (landing <h1>)")
+        if _is_todo(loop.get("what_you_send")) and _is_todo(loop.get("intake_fields")):
+            errors.append("loop: needs what_you_send or intake_fields (the intake)")
+        # the landing renders price + promise from offer:
+        if _is_todo(offer.get("price")):
+            errors.append("offer.price: required when a loop (landing page) is present")
+        if _is_todo(offer.get("promise")):
+            errors.append("offer.promise: required when a loop is present (must be falsifiable)")
+        if _is_todo(loop.get("turnaround")):
+            warnings.append("loop.turnaround: unfilled")
+    else:
+        if not offer or _is_todo(offer):
+            warnings.append("offer: none (agents-only scaffold; no customer-facing surface)")
+
+    if offer and not _is_todo(offer) and _is_todo(offer.get("paragraph")):
+        warnings.append("offer.paragraph: unfilled (used in OFFER.md and as landing pitch fallback)")
+
+    # any straggler TODO anywhere -> loud, not silent
+    def _walk(obj, path=""):
+        if isinstance(obj, dict):
+            for k, v in obj.items():
+                _walk(v, f"{path}.{k}" if path else k)
+        elif isinstance(obj, list):
+            for i, v in enumerate(obj):
+                _walk(v, f"{path}[{i}]")
+        elif isinstance(obj, str) and obj.strip() == TODO:
+            warnings.append(f"{path}: still 'TODO'")
+
+    _walk({k: v for k, v in spec.items() if not k.startswith("_")})
+    # de-dup while preserving order
+    warnings = list(dict.fromkeys(warnings))
+    return errors, warnings
+
+
+def _print_report(errors, warnings):
+    for w in warnings:
+        print(f"  WARN  {w}", file=sys.stderr)
+    for e in errors:
+        print(f"  ERROR {e}", file=sys.stderr)
+
+
+def cmd_new(args):
+    slug = args.slug
+    dst = REPO_ROOT / "factory" / "specs" / f"{slug}.json"
+    if dst.exists():
+        sys.exit(f"REFUSING: {dst} already exists.")
+    spec = scaffold_spec_template(slug, args.desire)
+    dst.write_text(json.dumps(spec, indent=2) + "\n", encoding=ENC)
+    print(f"Scaffolded spec: {dst}")
+    print("\nInterview (fill these in the spec, then `validate`, then `build`):")
+    for axis, q in INTERVIEW_AXES:
+        print(f"  - axes.{axis}: {q}")
+    print("  - offer.paragraph / price / promise (price + promise required if loop present)")
+    print("  - loop.headline / what_you_send / what_you_get / intake_fields")
+    print("\nThe factory does NOT invent these (no auto-ideation). Interview the operator.")
+
+
+def cmd_validate(args):
+    spec = load_spec(args.spec)
+    errors, warnings = validate_spec(spec)
+    _print_report(errors, warnings)
+    if errors:
+        print(f"INVALID: {len(errors)} error(s), {len(warnings)} warning(s) -- {args.spec}")
+        sys.exit(1)
+    print(f"VALID: {len(warnings)} warning(s) -- {args.spec}")
+
+
+def cmd_build(args):
+    spec = load_spec(args.spec)
+    errors, warnings = validate_spec(spec)
+    _print_report(errors, warnings)
+    if errors:
+        sys.exit(
+            f"REFUSING to build: {len(errors)} validation error(s) in {args.spec}. "
+            f"Fix the spec (or run `validate`) and retry."
+        )
+    spec["_spec_source"] = args.spec
+    build(spec, args.output_root)
+
+
 def main():
-    parser = argparse.ArgumentParser(description="verifiable business factory v0.0")
+    parser = argparse.ArgumentParser(description="verifiable business factory v0.1")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
-    p_build = sub.add_parser("build", help="Scaffold a business instance from a spec")
+    p_new = sub.add_parser("new", help="Scaffold a spec from the interview axes (desire -> spec)")
+    p_new.add_argument("slug", help="Business slug (lowercase, [a-z0-9-])")
+    p_new.add_argument("--desire", help="One-line business desire to record in the spec")
+
+    p_val = sub.add_parser("validate", help="Validate a spec without building")
+    p_val.add_argument("spec", help="Path to spec file (JSON)")
+
+    p_build = sub.add_parser("build", help="Build a business instance from a spec (validates first)")
     p_build.add_argument("spec", help="Path to spec file (JSON)")
     p_build.add_argument(
         "--output-root",
@@ -320,10 +495,12 @@ def main():
 
     args = parser.parse_args()
 
-    if args.cmd == "build":
-        spec = load_spec(args.spec)
-        spec["_spec_source"] = args.spec
-        build(spec, args.output_root)
+    if args.cmd == "new":
+        cmd_new(args)
+    elif args.cmd == "validate":
+        cmd_validate(args)
+    elif args.cmd == "build":
+        cmd_build(args)
 
 
 if __name__ == "__main__":

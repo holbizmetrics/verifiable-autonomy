@@ -4,6 +4,12 @@
     "b1-customer-interviewer"
   ],
   "mode": "step",
+  "axes": {
+    "what_is_sold": "Written audit of an AI-agent setup (prompts + tool wiring + audit logs), naming hallucination/drift/misuse risks",
+    "to_whom": "Berlin Early AI-dopters with >=1 agent in some running state (prototype or prod)",
+    "how_value_delivered": "Async written report (PDF or markdown), 5 business days from intake received",
+    "how_money_captured": "Email intake -> manual invoice (bank transfer or invoice link), $2,500 flat; full refund if zero auditable risks found"
+  },
   "icp": "Berlin Early AI-dopters (2026-06-17 attendees) with >=1 agent in some running state (prototype or prod)",
   "scope_hours_max": 4,
   "delivery_mode": "async-written-report-only",

@@ -18,17 +18,48 @@ This is the layer **above** the B-tracks (`B-PROPOSAL.md`). The B-tracks are the
 
 ## Usage
 
-```bash
-# Agents-only scaffold (no loop block in the spec):
-python factory/factory.py build factory/specs/verifiable-autonomy.json
+The pipeline is **desire → spec → business**:
 
-# Full business with a value→capture loop (spec has a loop block):
-python factory/factory.py build factory/specs/agent-audit-consulting.json
+```bash
+# 1. Scaffold a spec from the interview axes (prints the questions to fill):
+python factory/factory.py new my-business --desire "sell X to Y"
+#    -> factory/specs/my-business.json (axes/offer/loop as TODO)
+#    Interview the operator; fill the TODOs. The factory does NOT auto-ideate.
+
+# 2. Validate before building (build also does this; this is the standalone check):
+python factory/factory.py validate factory/specs/my-business.json
+
+# 3. Build (validates first; refuses on errors):
+python factory/factory.py build factory/specs/agent-audit-consulting.json   # full loop
+python factory/factory.py build factory/specs/verifiable-autonomy.json      # agents-only
 ```
 
-Outputs to `businesses/<name>/`. Open that directory in Claude Code and the agents are wired; if a `storefront/` was emitted, follow `storefront/OPERATOR-ACTIONS.md` to deploy the landing + intake loop.
+`build` outputs to `businesses/<name>/`. Open it in Claude Code and the agents are wired; if a `storefront/` was emitted, follow `storefront/OPERATOR-ACTIONS.md` to deploy the landing + intake loop.
 
-## Spec format (v0.0)
+## Commands
+
+| Command | What it does |
+|---|---|
+| `new <slug> [--desire ...]` | Scaffold `factory/specs/<slug>.json` from the four minimum-viable axes; print the interview. Refuses to overwrite. |
+| `validate <spec>` | Report errors (block a build) + warnings (don't). Exit 1 if any error. |
+| `build <spec>` | Validate, then emit `businesses/<name>/`. **Refuses to build an invalid spec** — no broken business ships silently. |
+
+## Validation rules
+
+**Errors (block the build):** missing/bad `name` (must be an `[a-z0-9-]` slug); no `agents`, or an agent whose template is absent; invalid `mode`; a `loop` with an unknown `type`, no headline/title, no intake, or whose `offer` lacks `price`/`promise` (the landing renders those).
+
+**Warnings (don't block):** no `axes` block; unfilled `offer.paragraph`; agents-only spec with no offer; any straggler `"TODO"` left anywhere (so a half-filled scaffold is loud).
+
+## The interview axes (the minimum-viable business-spec)
+
+`new` scaffolds these four; the operator/agent fills them. Per `factory/SPEC.md` § Input — the factory **interviews to clarify, it does not invent** (autonomous ideation is deferred):
+
+- `axes.what_is_sold` — the product/offer in one phrase
+- `axes.to_whom` — the ICP
+- `axes.how_value_delivered` — storefront / written report / flow
+- `axes.how_money_captured` — payment mechanism + price
+
+## Spec format
 
 ```json
 {
@@ -36,6 +67,12 @@ Outputs to `businesses/<name>/`. Open that directory in Claude Code and the agen
   "agents": ["b1-customer-interviewer", "..."],
   "icp_source": "agents/b1-customer-interviewer/icp.md",
   "mode": "step",
+  "axes": {
+    "what_is_sold": "...",
+    "to_whom": "...",
+    "how_value_delivered": "...",
+    "how_money_captured": "..."
+  },
   "offer": {
     "paragraph": "...",
     "price": "...",
