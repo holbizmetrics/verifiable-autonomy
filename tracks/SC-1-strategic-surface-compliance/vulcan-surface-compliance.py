@@ -58,6 +58,16 @@ NEGATION = re.compile(
 MUTATION_TOOLS = {"Edit", "Write", "NotebookEdit", "MultiEdit"}
 READ_TOOLS = {"Read", "Grep", "Glob"}
 
+# A success claim only demands verification when CODE changed. A "done" after writing a
+# doc/note/config has nothing to test/build, so requiring a verify-command there is a false
+# positive -- and a false positive (which traps a turn) is the fatal loss this gate is tuned
+# against. So the success rule fires only on mutations to code-like files.
+CODE_EXTS = {
+    ".py", ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs", ".go", ".rs", ".java", ".kt",
+    ".kts", ".c", ".cc", ".cpp", ".h", ".hpp", ".rb", ".php", ".swift", ".scala", ".cs",
+    ".m", ".mm", ".sql", ".sh", ".bash", ".zsh",
+}
+
 # Bash commands that count as verification (test/build/lint/typecheck).
 VERIFY_CMD = re.compile(
     r"\b(pytest|unittest|npm (?:run )?test|yarn test|jest|vitest|cargo (?:test|build|check)|"
@@ -161,10 +171,21 @@ def _matches_unnegated(pattern: re.Pattern[str], text: str) -> bool:
     return False
 
 
+def _mutated_code(tools: list[dict[str, Any]]) -> bool:
+    """True iff this turn edited at least one code-like file (by extension)."""
+    for t in tools:
+        if t["name"] in MUTATION_TOOLS:
+            path = t["input"].get("file_path") or t["input"].get("notebook_path") or ""
+            _, ext = os.path.splitext(str(path))
+            if ext.lower() in CODE_EXTS:
+                return True
+    return False
+
+
 def evaluate(assistant_text: str, tools: list[dict[str, Any]]) -> tuple[str, str]:
     """Return (verdict, reason_code). verdict in {'pass','block'}."""
     names = [t["name"] for t in tools]
-    mutated = any(n in MUTATION_TOOLS for n in names)
+    mutated = _mutated_code(tools)
     read_back = any(n in READ_TOOLS for n in names)
     verified_cmd = any(
         t["name"] == "Bash" and VERIFY_CMD.search(str(t["input"].get("command", "")))

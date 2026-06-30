@@ -51,6 +51,7 @@ def _verdict(stdout: str) -> str:
 # --- cases: (name, tool_uses, assistant_text, expected_verdict) ----------------------
 EDIT = {"name": "Edit", "input": {"file_path": "x.py"}}
 WRITE = {"name": "Write", "input": {"file_path": "x.py"}}
+WRITE_DOC = {"name": "Write", "input": {"file_path": "NOTES.md"}}
 PYTEST = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}}
 READ = {"name": "Read", "input": {"file_path": "x.py"}}
 
@@ -58,6 +59,9 @@ CASES = [
     ("mutation+success+noverify -> block", [EDIT], "Done. It works now.", "block"),
     ("mutation+success+pytest -> allow", [EDIT, PYTEST], "Done, all tests pass.", "allow"),
     ("mutation+success+readback -> allow", [WRITE, READ], "Fixed and verified.", "allow"),
+    # F3 fix: a "done" after writing a doc/note has nothing to test -> requiring a verify
+    # command there is the fatal false positive. Code-only scoping makes this allow.
+    ("doc mutation + success + noverify -> allow", [WRITE_DOC], "Done, drafted the notes.", "allow"),
     ("derivation+noread -> block", [], "I read config.py and it sets DEBUG=true.", "block"),
     ("derivation+read -> allow", [READ], "I read config.py; DEBUG=true.", "allow"),
     ("conversational done, no mutation -> allow", [], "Done — what do you want next?", "allow"),

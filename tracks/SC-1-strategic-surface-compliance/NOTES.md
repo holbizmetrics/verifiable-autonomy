@@ -44,6 +44,28 @@ never trap a turn — discipline, not a cage.
 This matches the repo's posture: the mechanism is verifiable today; the track-record is not
 yet earned, and is named rather than claimed.
 
+## Self-teardown (attacking the falsifier)
+
+Per the invitation to break it, the triad was attacked directly. Three findings:
+
+- **F3 — false positive on non-code mutations (FIXED).** The success rule fired on *any*
+  mutation, so writing a doc/note and saying "done" tripped it though nothing was testable.
+  That is the fatal loss class (a trapped turn gets the gate disabled). The rule is now
+  scoped to code-file mutations (`CODE_EXTS`); doc/config writes no longer demand a verify
+  command. New regression test: `doc mutation + success + noverify -> allow`.
+- **F1 — read-back counts as verification (KNOWN GAP, not patched).** A `Read` of a
+  just-edited file satisfies a success claim, so "edited, read it back, fixed and verified"
+  passes with no real check. A recall gap, gameable by surface theater. Left as-tuned: the
+  design accepts low recall and backstops with the next-turn audit; tightening it trades
+  precision (the fatal direction) and is a tuning call for the maintainer.
+- **F2 — verify command counted as present, not as passed (KNOWN GAP, not patched).** The
+  gate detects that a test/build command *ran*, never that it *passed* (it does not parse
+  tool_result exit status). A failing `pytest` still satisfies the gate. The most
+  interesting tightening if recall is later preferred over precision-max.
+
+F1/F2 are recorded, not silently re-tuned, because flipping them re-tunes the maintainer's
+precision/recall choice.
+
 ## Files
 
 - `SPEC.md` — track spec: gap, mechanism, audit schema, pre-registered falsifier, detector-gaps, build plan.
