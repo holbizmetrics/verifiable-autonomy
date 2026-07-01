@@ -18,18 +18,19 @@ Per `factory/SPEC.md` § Working protocol. These 4 steps exist because this exac
 
 4. **"No in-session move" is a valid answer.** When asked "what's next" and there's no in-session move, the correct output is *"the move is yours"* — **not** substrate-polish, doc-tidying, or scaffolding more layers.
 
-## State as of 2026-05-26
+## State as of 2026-07-01
 
 - **Level-0 instances deployed with value→capture loop:** 0 of needed 1.
 - **Level-0 instance in flight:** `instances/agent-audit-consulting/` — spec locked (4 axes), landing + intake + operator-actions written in-session; deploy + Stripe link + test-loop verify = operator-bound, see `instances/agent-audit-consulting/OPERATOR-ACTIONS.md`.
-- **Factory layer (`factory/`):** scaffolded prematurely (spec says don't build until ≥2 instances exist); kept as substrate, not advanced until base case done.
+- **Factory layer (`factory/`):** scaffold **BUILT 2026-06-23 by explicit operator override** — recorded in `factory/SPEC.md` § Amendment 2026-07-01 (schema + `validate` + `build` + storefront emission in `factory.py`). Still scaffold-only; **`factory/specs/` NOT extended and the factory NOT declared generalizing until a real, structurally-distinct n≥2 instance exists** (base-case gate still holds for the recursive step).
+- **Instances built from spec:** n=1 `agent-audit-consulting` (base); `pitch-deck-review` = same-shape second (content-parameterization, not the axis-inverting generalization test — still owed). 2026-07-01: `styling-teacher` was mis-filed into `factory/specs/` then removed → `../Researches/styling-teacher-candidate/` (the predicted n=1-schema harm; see ROADMAP § Where we are + SPEC amendment).
 
 In-session move = advance the in-flight instance toward done-condition where steps are not operator-bound. If all remaining steps are operator-bound, the correct output is *"the move is yours"*.
 
 ## Repo map
 
 - `factory/SPEC.md` — authoritative
-- `factory/factory.py`, `factory/specs/`, `factory/README.md` — premature factory scaffold; do not advance until base case exists
+- `factory/factory.py`, `factory/specs/`, `factory/README.md` — scaffold built by operator override (see `factory/SPEC.md` § Amendment 2026-07-01); do NOT extend `factory/specs/` with new business shapes until a real n≥2 instance exists
 - `instances/agent-audit-consulting/` — Level-0 instance in flight (AI-agent audit consulting)
 - `agents/b1-customer-interviewer/` — B-1 primitive (talk-to-customer); the one primitive partially built
 - `B-PROPOSAL.md`, `ROADMAP.md`, `README.md` — repo framing docs (factory-frame corrected in commit 69e0b51)

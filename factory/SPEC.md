@@ -64,6 +64,28 @@ the assembler** of those primitives for a given spec.
 - Run-time autonomy (the business runs itself).
 - The factory / generalization layer (until ≥2 worked instances exist).
 
+## Amendment 2026-07-01 — operator override on the scaffold layer (recorded, not hidden)
+
+By explicit operator decision (2026-06-23), a **content-agnostic scaffold** of the factory layer was
+built ahead of the ≥2-instance gate: business-spec schema + `validate` + `build` + value→capture
+storefront emission (`factory/factory.py`). This amendment records that override so SPEC (law),
+`ROADMAP.md` (practice), and `CLAUDE.md` (state) agree on one source of truth.
+
+**What the override does NOT relax — the base-case gate still holds for the generalization step.**
+"Base case before factory" (above) bars building the *generalization* layer from n=1 for a reason:
+*you can't write the recursive step without a base case* — from zero completed instances you build the
+**wrong** generalization. Building a *content-agnostic emitter* early doesn't wander the content
+dark-zone (the operator supplies all content via the spec), so that half is safe — but it does **not**
+license extending `factory/specs/` or declaring the factory *generalizing* before a real,
+structurally-distinct **n≥2** instance exists.
+
+**Concrete evidence the gate is real (2026-07-01):** a differently-shaped idea (styling-teacher, an
+*app*) was force-fit into the n=1 (email-intake *service*) schema — the predicted "wrong recursive
+step from no base case." It was removed to `../Researches/styling-teacher-candidate/`. The premature
+schema was the root affordance for that misfit. So: scaffold — allowed and recorded; extension of
+`factory/specs/` with new business shapes — **gated on real n≥2**; `pitch-deck-review` is a same-shape
+second (content-parameterization), not that generalization test.
+
 ---
 *Honest scope: TRIAD here was a genuine standpoint review; the KG-substrate pass was
 single-agent (one model playing the substrates) = the weaker form — good for shaping a spec,
