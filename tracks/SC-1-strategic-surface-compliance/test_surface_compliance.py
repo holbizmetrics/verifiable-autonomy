@@ -71,6 +71,7 @@ PYTEST_OK = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}, "resu
 PYTEST_FAIL = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}, "result": "fail"}
 READ = {"name": "Read", "input": {"file_path": "x.py"}}
 READ_OTHER = {"name": "Read", "input": {"file_path": "other.py"}}
+READ_CONFIG = {"name": "Read", "input": {"file_path": "config.py"}}
 
 CASES = [
     ("mutation+success+noverify -> block", [EDIT], "Done. It works now.", "block"),
@@ -87,6 +88,9 @@ CASES = [
     # F1: the read must touch the file the claim NAMES.
     ("derivation+read of named file -> allow", [READ], "I read x.py; DEBUG=true.", "allow"),
     ("F1: derivation + read of UNRELATED file -> block", [READ_OTHER], "I read config.py; DEBUG=true.", "block"),
+    # F1 false-positive guard: loose referent ("the config") + a name-dropped file, but the
+    # read really is config.py -> the stem escape keeps this an allow.
+    ("F1: loose referent + name-drop, real read -> allow", [READ_CONFIG], "I checked the config; it matches README.md style.", "allow"),
     ("conversational done, no mutation -> allow", [], "Done — what do you want next?", "allow"),
     ("negated success + mutation -> allow", [EDIT], "Not done yet, still need to verify.", "allow"),
     ("success inside a question -> allow", [EDIT], "Is it done? Let me check.", "allow"),

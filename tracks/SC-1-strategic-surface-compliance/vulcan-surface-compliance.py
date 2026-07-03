@@ -249,6 +249,15 @@ def _read_backs_derivation(assistant_text: str, tools: list[dict[str, Any]]) -> 
         if not rp:
             return True  # repo-wide grep/glob: plausibly covers the named file
         read_bases.add(os.path.basename(str(rp)))
+    # A read whose filename STEM is named in the prose (e.g. "the config" + a Read of
+    # config.py) backs the claim even if an extensioned token elsewhere differs. Without
+    # this, a loosely-named referent ("the config") plus a name-dropped file ("README.md")
+    # would false-block a turn that really did read the right file. Stem >= 3 chars to avoid
+    # spurious 1-2 char hits (that only costs recall, never a false block).
+    for base in read_bases:
+        stem = os.path.splitext(base)[0]
+        if len(stem) >= 3 and re.search(r"\b" + re.escape(stem) + r"\b", assistant_text, re.IGNORECASE):
+            return True
     referenced = {os.path.basename(m) for m in _FILE_TOKEN.findall(assistant_text)}
     if not referenced:
         return True  # claim names no specific file -> any read counts (prior behavior)
