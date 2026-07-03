@@ -69,12 +69,25 @@ CODE_EXTS = {
 }
 
 # Bash commands that count as verification (test/build/lint/typecheck).
+# F2: matching the command is necessary but not sufficient — the command's tool_result
+# must also be explicitly present with is_error False (see _passed_verify).
 VERIFY_CMD = re.compile(
     r"\b(pytest|unittest|npm (?:run )?test|yarn test|jest|vitest|cargo (?:test|build|check)|"
     r"go test|go build|make(?:\s|$)|tsc|mypy|ruff|eslint|flake8|gradle|mvn|"
     r"npm run build|next build|vite build|cmake|ctest|bats)\b",
     re.IGNORECASE,
 )
+
+# F1: extensions that make a token in assistant text look like a referenced file.
+REF_EXTS = CODE_EXTS | {
+    ".md", ".txt", ".json", ".yaml", ".yml", ".toml", ".ini", ".cfg", ".conf",
+    ".xml", ".html", ".css", ".csv", ".lock", ".env", ".ipynb",
+}
+
+# Filename-looking tokens in prose ("config.py", "settings.json"). Extension is then
+# checked against REF_EXTS so "e.g" / "v2.0" style tokens never enter the relevant set
+# (a spurious referenced-file would tighten F1 into a false-positive source).
+FILENAME = re.compile(r"\b[\w.-]+\.[A-Za-z]\w*\b")
 
 
 def allow() -> None:
@@ -102,7 +115,7 @@ def _tool_uses(content: Any) -> list[dict[str, Any]]:
     if not isinstance(content, list):
         return []
     return [
-        {"name": b.get("name", ""), "input": b.get("input", {}) or {}}
+        {"name": b.get("name", ""), "input": b.get("input", {}) or {}, "id": b.get("id", "")}
         for b in content
         if isinstance(b, dict) and b.get("type") == "tool_use"
     ]
@@ -124,8 +137,24 @@ def _is_real_user_message(ev: dict[str, Any]) -> bool:
     return False
 
 
-def parse_last_turn(transcript_path: str) -> tuple[str, list[dict[str, Any]]]:
-    """Return (assistant_text, tool_uses) for the turn since the last real user message."""
+def _tool_results(content: Any) -> dict[str, bool]:
+    """Map tool_use_id -> failed?, read from tool_result blocks. failed = is_error truthy.
+    These blocks ride in the tool-result-only user messages within the turn window."""
+    out: dict[str, bool] = {}
+    if not isinstance(content, list):
+        return out
+    for b in content:
+        if isinstance(b, dict) and b.get("type") == "tool_result":
+            tuid = b.get("tool_use_id", "")
+            if tuid:
+                out[tuid] = bool(b.get("is_error"))
+    return out
+
+
+def parse_last_turn(transcript_path: str) -> tuple[str, list[dict[str, Any]], dict[str, bool]]:
+    """Return (assistant_text, tool_uses, results) for the turn since the last real user
+    message. `results` maps tool_use_id -> failed_bool (True iff the result carried
+    is_error); a tool with no captured result is simply absent (= unknown)."""
     events: list[dict[str, Any]] = []
     with open(transcript_path) as fh:
         for line in fh:
@@ -144,13 +173,18 @@ def parse_last_turn(transcript_path: str) -> tuple[str, list[dict[str, Any]]]:
             break
     text_parts: list[str] = []
     tools: list[dict[str, Any]] = []
+    results: dict[str, bool] = {}
     for ev in events[start:]:
+        msg = ev.get("message", ev)
+        content = msg.get("content") if isinstance(msg, dict) else None
         if ev.get("type") == "assistant" or ev.get("role") == "assistant":
-            msg = ev.get("message", ev)
-            content = msg.get("content") if isinstance(msg, dict) else None
             text_parts.append(_text_of(content))
             tools.extend(_tool_uses(content))
-    return " ".join(p for p in text_parts if p), tools
+        try:
+            results.update(_tool_results(content))
+        except Exception:
+            pass  # fail open: an unreadable result just leaves that tool unknown
+    return " ".join(p for p in text_parts if p), tools, results
 
 
 def _matches_unnegated(pattern: re.Pattern[str], text: str) -> bool:
@@ -182,16 +216,33 @@ def _mutated_code(tools: list[dict[str, Any]]) -> bool:
     return False
 
 
-def evaluate(assistant_text: str, tools: list[dict[str, Any]]) -> tuple[str, str]:
+def _passed_verify(tools: list[dict[str, Any]], results: dict[str, bool]) -> bool:
+    """True iff a verify command (test/build/lint) RAN and explicitly did NOT error.
+
+    F2: a verify command counts only when its result is present with is_error False.
+    A missing/unknown result contributes NOTHING — it is never inferred as passed (that
+    would re-open the 'ran = verified' hole) nor as failed (that could trap a turn whose
+    result has not landed). Fail-open: uncertainty falls through to read_back."""
+    for t in tools:
+        if t["name"] == "Bash" and VERIFY_CMD.search(str(t["input"].get("command", ""))):
+            if results.get(t.get("id", "")) is False:  # ran AND explicitly did not error
+                return True
+    return False
+
+
+def evaluate(
+    assistant_text: str,
+    tools: list[dict[str, Any]],
+    results: dict[str, bool] | None = None,
+) -> tuple[str, str]:
     """Return (verdict, reason_code). verdict in {'pass','block'}."""
+    results = results or {}
     names = [t["name"] for t in tools]
     mutated = _mutated_code(tools)
     read_back = any(n in READ_TOOLS for n in names)
-    verified_cmd = any(
-        t["name"] == "Bash" and VERIFY_CMD.search(str(t["input"].get("command", "")))
-        for t in tools
-    )
-    verified = verified_cmd or read_back
+    # F2: a verify command backs a success claim only if it PASSED (result seen, no error);
+    # read_back remains the softer fallback (avoids false positives on grep-the-call-sites).
+    verified = _passed_verify(tools, results) or read_back
 
     success_claim = _matches_unnegated(SUCCESS, assistant_text)
     derivation_claim = _matches_unnegated(DERIVATION, assistant_text)
@@ -250,11 +301,11 @@ def main() -> None:
         allow()
 
     try:
-        assistant_text, tools = parse_last_turn(tpath)
+        assistant_text, tools, results = parse_last_turn(tpath)
     except Exception:
         allow()  # fail open
 
-    verdict, reason_code = evaluate(assistant_text, tools)
+    verdict, reason_code = evaluate(assistant_text, tools, results)
     write_audit(
         {
             "session": data.get("session_id", ""),

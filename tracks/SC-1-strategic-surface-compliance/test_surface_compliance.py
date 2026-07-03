@@ -17,14 +17,28 @@ def _msg(role: str, blocks: list[dict]) -> str:
 
 
 def _transcript(user_text: str, tool_uses: list[dict], assistant_text: str) -> str:
-    """Write a JSONL transcript: one user turn, then an assistant turn with tool_uses + text."""
-    content: list[dict] = [{"type": "tool_use", "name": t["name"], "input": t.get("input", {})}
-                           for t in tool_uses]
+    """Write a JSONL transcript: one user turn, an assistant turn with tool_uses + text,
+    then (if any tool carries a "result") a tool_result-only user message — mirroring how
+    Claude Code delivers tool outputs. A tool dict may set "result": "ok" | "fail" to emit
+    a tool_result with is_error accordingly; omit it to leave the result UNKNOWN."""
+    content: list[dict] = []
+    result_blocks: list[dict] = []
+    for i, t in enumerate(tool_uses):
+        tid = f"t{i}"
+        content.append({"type": "tool_use", "name": t["name"], "input": t.get("input", {}), "id": tid})
+        if "result" in t:
+            result_blocks.append({
+                "type": "tool_result", "tool_use_id": tid,
+                "is_error": t["result"] == "fail",
+                "content": "Exit code 1" if t["result"] == "fail" else "ok",
+            })
     content.append({"type": "text", "text": assistant_text})
     lines = [
         _msg("user", [{"type": "text", "text": user_text}]),
         _msg("assistant", content),
     ]
+    if result_blocks:
+        lines.append(_msg("user", result_blocks))
     fd, path = tempfile.mkstemp(suffix=".jsonl")
     with os.fdopen(fd, "w") as fh:
         fh.write("\n".join(lines) + "\n")
@@ -52,12 +66,18 @@ def _verdict(stdout: str) -> str:
 EDIT = {"name": "Edit", "input": {"file_path": "x.py"}}
 WRITE = {"name": "Write", "input": {"file_path": "x.py"}}
 WRITE_DOC = {"name": "Write", "input": {"file_path": "NOTES.md"}}
-PYTEST = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}}
+PYTEST = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}}          # result UNKNOWN
+PYTEST_OK = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}, "result": "ok"}
+PYTEST_FAIL = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}, "result": "fail"}
 READ = {"name": "Read", "input": {"file_path": "x.py"}}
 
 CASES = [
     ("mutation+success+noverify -> block", [EDIT], "Done. It works now.", "block"),
-    ("mutation+success+pytest -> allow", [EDIT, PYTEST], "Done, all tests pass.", "allow"),
+    # F2: a verify command backs the claim only if its result is present AND passed.
+    ("mutation+success+pytest PASSED -> allow", [EDIT, PYTEST_OK], "Done, all tests pass.", "allow"),
+    ("F2: verify RAN but FAILED, no readback -> block", [EDIT, PYTEST_FAIL], "Done, tests green.", "block"),
+    ("F2: verify result UNKNOWN, no readback -> block", [EDIT, PYTEST], "Done, tests green.", "block"),
+    ("F2: verify UNKNOWN but readback present -> allow", [EDIT, PYTEST, READ], "Fixed.", "allow"),
     ("mutation+success+readback -> allow", [WRITE, READ], "Fixed and verified.", "allow"),
     # F3 fix: a "done" after writing a doc/note has nothing to test -> requiring a verify
     # command there is the fatal false positive. Code-only scoping makes this allow.
