@@ -53,18 +53,22 @@ Per the invitation to break it, the triad was attacked directly. Three findings:
   That is the fatal loss class (a trapped turn gets the gate disabled). The rule is now
   scoped to code-file mutations (`CODE_EXTS`); doc/config writes no longer demand a verify
   command. New regression test: `doc mutation + success + noverify -> allow`.
-- **F1 — read-back counts as verification (KNOWN GAP, not patched).** A `Read` of a
-  just-edited file satisfies a success claim, so "edited, read it back, fixed and verified"
-  passes with no real check. A recall gap, gameable by surface theater. Left as-tuned: the
-  design accepts low recall and backstops with the next-turn audit; tightening it trades
-  precision (the fatal direction) and is a tuning call for the maintainer.
-- **F2 — verify command counted as present, not as passed (KNOWN GAP, not patched).** The
-  gate detects that a test/build command *ran*, never that it *passed* (it does not parse
-  tool_result exit status). A failing `pytest` still satisfies the gate. The most
-  interesting tightening if recall is later preferred over precision-max.
+- **F2 — verify command counted as present, not as passed (FIXED — the block-mode blocker).**
+  The gate detected that a test/build command *ran*, never that it *passed*, so a failing
+  `pytest` satisfied it (it certified the ritual, not the result). `parse_last_turn` now
+  reads `tool_result` blocks (`tool_use_id -> is_error`) from the turn window, and a verify
+  command backs a success claim only when its result is present and `is_error` is false.
+  Fail-open held: a missing/unknown result counts as neither passed nor failed and falls
+  through to `read_back`, so uncertainty never manufactures a block.
+- **F1 — read-back was any read, of any file (TIGHTENED).** A `Read` of *any* file satisfied
+  a derivation claim ("I read X"), even a file the claim never named. The derivation rule now
+  requires a read whose basename matches a file the claim names (a path-less repo-wide search
+  still counts; a claim that names no file still accepts any read). Conservative by design —
+  F1 is a recall gap, so every uncertain case resolves toward backing, never toward a block.
 
-F1/F2 are recorded, not silently re-tuned, because flipping them re-tunes the maintainer's
-precision/recall choice.
+Both were previously recorded-not-patched (a maintainer tuning call); the maintainer's PR
+review requested F2 before block-mode and F1 alongside, so both are now landed with the
+fail-open/precision invariants preserved and regression tests added.
 
 ## Files
 

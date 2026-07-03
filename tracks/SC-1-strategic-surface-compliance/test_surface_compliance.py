@@ -70,6 +70,7 @@ PYTEST = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}}         
 PYTEST_OK = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}, "result": "ok"}
 PYTEST_FAIL = {"name": "Bash", "input": {"command": "python3 -m pytest -q"}, "result": "fail"}
 READ = {"name": "Read", "input": {"file_path": "x.py"}}
+READ_OTHER = {"name": "Read", "input": {"file_path": "other.py"}}
 
 CASES = [
     ("mutation+success+noverify -> block", [EDIT], "Done. It works now.", "block"),
@@ -83,7 +84,9 @@ CASES = [
     # command there is the fatal false positive. Code-only scoping makes this allow.
     ("doc mutation + success + noverify -> allow", [WRITE_DOC], "Done, drafted the notes.", "allow"),
     ("derivation+noread -> block", [], "I read config.py and it sets DEBUG=true.", "block"),
-    ("derivation+read -> allow", [READ], "I read config.py; DEBUG=true.", "allow"),
+    # F1: the read must touch the file the claim NAMES.
+    ("derivation+read of named file -> allow", [READ], "I read x.py; DEBUG=true.", "allow"),
+    ("F1: derivation + read of UNRELATED file -> block", [READ_OTHER], "I read config.py; DEBUG=true.", "block"),
     ("conversational done, no mutation -> allow", [], "Done — what do you want next?", "allow"),
     ("negated success + mutation -> allow", [EDIT], "Not done yet, still need to verify.", "allow"),
     ("success inside a question -> allow", [EDIT], "Is it done? Let me check.", "allow"),

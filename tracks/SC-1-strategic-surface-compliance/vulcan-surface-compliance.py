@@ -230,6 +230,31 @@ def _passed_verify(tools: list[dict[str, Any]], results: dict[str, bool]) -> boo
     return False
 
 
+# A filename-like token in prose (config.py, NOTES.md). Extension is 2-8 letters, which
+# excludes prose false hits like "e.g"/"i.e" (1-char) and version numbers ("3.11").
+_FILE_TOKEN = re.compile(r"\b[\w./-]+\.[A-Za-z]{2,8}\b")
+
+
+def _read_backs_derivation(assistant_text: str, tools: list[dict[str, Any]]) -> bool:
+    """F1: a read backs an 'I read X' claim only if it plausibly touches the file the
+    claim NAMES. A path-less (repo-wide) search counts, and if the claim names no file
+    we fall back to 'any read counts' — F1 is a recall gap, never a false-positive source,
+    so every uncertain case resolves toward backing (no block)."""
+    reads = [t for t in tools if t["name"] in READ_TOOLS]
+    if not reads:
+        return False
+    read_bases: set[str] = set()
+    for t in reads:
+        rp = t["input"].get("file_path") or t["input"].get("path") or ""
+        if not rp:
+            return True  # repo-wide grep/glob: plausibly covers the named file
+        read_bases.add(os.path.basename(str(rp)))
+    referenced = {os.path.basename(m) for m in _FILE_TOKEN.findall(assistant_text)}
+    if not referenced:
+        return True  # claim names no specific file -> any read counts (prior behavior)
+    return bool(referenced & read_bases)
+
+
 def evaluate(
     assistant_text: str,
     tools: list[dict[str, Any]],
@@ -250,8 +275,8 @@ def evaluate(
     # Primary inverted rule: changed something, claimed success, ran no verification.
     if mutated and success_claim and not verified:
         return "block", "mutation_success_unverified"
-    # Secondary: asserted a read with no read-class tool call this turn.
-    if derivation_claim and not read_back:
+    # Secondary: asserted a read, but no read this turn touches the file the claim names.
+    if derivation_claim and not _read_backs_derivation(assistant_text, tools):
         return "block", "derivation_unread"
     return "pass", "clean"
 
